@@ -8,7 +8,7 @@ VGL package for distribution
    - python setup.py bdist_wheel\\
 
 2. Install libvgl package
-  - pip install dist\libvgl-0.1-py3-none-any.whl
+   - pip install dist\libvgl-0.1-py3-none-any.whl
 
 3. Usage
    - Run python
