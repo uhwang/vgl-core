@@ -16,4 +16,4 @@ VGL package for distribution
    import libvgl as vgl
    vgl.pixel_grid()
 
-<img width="354" alt="libvgl pixelgrid" src="https://github.com/uhwang/vgl-core/assets/43251090/c46a6ea2-c973-4e03-bd5c-0c921013f8e6">
+<img width="354" alt="libvgl pixelgrid" src="https://github.com/uhwang/vgl-core/assets/43251090/7fa911c7-adbd-4f2e-8cfd-31f1f573d242">
