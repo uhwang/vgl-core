@@ -5,7 +5,7 @@ VGL package for distribution
 
 1. How to create libvgl package
    - pip install wheel
-   - python setup.py bdist_wheel\\
+   - python setup.py bdist_wheel
 
 2. Install libvgl package
    - pip install dist\libvgl-0.1-py3-none-any.whl
