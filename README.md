@@ -1,5 +1,5 @@
 # vgl-core
-VGL package for distribution\\
+VGL package for distribution  
 Python version: 3.11.4
 
 1. pip install wheel
