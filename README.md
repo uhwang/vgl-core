@@ -1,7 +1,7 @@
 # vgl-core
 VGL package for distribution  
 > [!NOTE]
-> Python version: 3.11.4
+> Wheel package was created with Python version: 3.11.4
 
 1. How to create libvgl package
    - pip install wheel
