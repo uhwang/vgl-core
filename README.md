@@ -1,6 +1,6 @@
 # vgl-core
 VGL package for distribution  
-> [!NOTE]Python version: 3.11.4
+[!NOTE]Python version: 3.11.4
 
 1. pip install wheel
 2. python setup.py bdist_wheel\\
