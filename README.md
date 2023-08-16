@@ -10,7 +10,10 @@ VGL package for distribution
 2. Install libvgl package
    - pip install dist\libvgl-0.1-py3-none-any.whl
 
-3. Usage
+3. LibVgl Architecture
+![VGL](https://github.com/uhwang/vgl/assets/43251090/9dd8c0b5-a10b-449e-9f74-b524721b50b7)
+
+4. Usage
    ```Python
    import libvgl as vgl
    vgl.pixel_grid()
@@ -19,25 +22,25 @@ VGL package for distribution
 
 ![libvgl pixelgrid screenshot-](https://github.com/uhwang/vgl-core/assets/43251090/af146b8e-e8e5-4fec-b195-a9cc972080ac)
 
-4. Plot example #1
+5. Plot example #1
 ![cardioid](https://github.com/uhwang/vgl-core/assets/43251090/25ebb160-e8dc-4a6b-905a-4287c27b6c91)
    ```Python
    import libvgl as vgl
    vgl.test.cardioid.save()
 
-5. Plot example #2
+6. Plot example #2
 ![fractree](https://github.com/uhwang/vgl-core/assets/43251090/634bfe5a-1678-470f-94ce-e729d0626e6f)
    ```Python
    import libvgal as vgl
    vgl.test.fractree.save()
 
-6. Plot example #3
+7. Plot example #3
 ![epicycloid](https://github.com/uhwang/vgl-core/assets/43251090/15e35fb7-d78d-4d82-9695-e5b8e89e10f5)
    ```Python
    import libvga as vgl
    vgl.test.epicyloid.save()
 
-7. Plot example #4
+8. Plot example #4
 ![potflow](https://github.com/uhwang/vgl-core/assets/43251090/bc4172ff-68dc-43e3-9de5-f5fc78cbf1b2)   
    ```Python
    import libvgl as vgl
@@ -49,7 +52,7 @@ VGL package for distribution
    import libvgl as vgl
    vgl.test.pramsym.save()
 
-11. Plot example #6
+10. Plot example #6
 ![x2](https://github.com/uhwang/vgl-core/assets/43251090/2e66c6af-0b21-4034-b823-2324c7b45ea0)   
     ```Python
     import libvgl as vgl
