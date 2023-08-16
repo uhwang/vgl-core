@@ -10,7 +10,7 @@ VGL package for distribution
 2. Install libvgl package
    - pip install dist\libvgl-0.1-py3-none-any.whl
 
-3. LibVgl Architecture
+3. Libvgl Architecture
 ![VGL](https://github.com/uhwang/vgl/assets/43251090/9dd8c0b5-a10b-449e-9f74-b524721b50b7)
 
 4. Usage
