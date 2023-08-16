@@ -60,6 +60,7 @@ VGL package for distribution
 
 11. Cantor Plot
 ![cantor](https://github.com/uhwang/vgl-core/assets/43251090/b7f9c51b-a052-454a-9454-1724f3705892)
+
 ```Python
 import libvgl as vgl
 
