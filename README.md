@@ -20,8 +20,9 @@ VGL package for distribution
 
 ![libvgl pixelgrid screenshot-](https://github.com/uhwang/vgl-core/assets/43251090/af146b8e-e8e5-4fec-b195-a9cc972080ac)
 
-   - Plot
+4. Plot example
    ```Python
+   import libvgl as vgl
    vgl.test.cardioid()
 
 
