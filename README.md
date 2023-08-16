@@ -1,5 +1,5 @@
 # vgl-core
-VGL package for distribution  
+vgl package for distribution  
 > [!NOTE]
 > Wheel package was created with Python version: 3.11.4
 
