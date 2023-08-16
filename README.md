@@ -58,4 +58,32 @@ VGL package for distribution
     ```Python
     import libvgl as vgl
     vgl.test.x2.save()
-![x2](https://github.com/uhwang/vgl-core/assets/43251090/2e66c6af-0b21-4034-b823-2324c7b45ea0)    
+![x2](https://github.com/uhwang/vgl-core/assets/43251090/2e66c6af-0b21-4034-b823-2324c7b45ea0)   
+
+11. Cantour Plot
+```Python
+import libvgl as vgl
+
+xmin,xmax,ymin,ymax=-10,10,-8,5.
+data = vgl.Data(xmin,xmax,ymin,ymax)
+fmm = vgl.FrameManager()
+frm = fmm.create(0,0,3,3, data)
+
+def cantor(dev, x, y, xrange, yshift, lthk):
+    if xrange >= 0.01:
+        dev.line(x, y, x+xrange, y, vgl.color.BLUE, lthk)
+        y += yshift
+        new_len = xrange/3.0
+        cantor(dev, x, y, new_len, yshift, lthk)
+        cantor(dev, x+new_len*2, y, new_len, yshift, lthk)
+        
+def save_cairo(fname, gbox, dpi):
+    dev = vgl.DeviceIMG(fname, gbox, dpi)
+    dev.set_device(frm)
+    cantor(dev, xmin, ymax*0.5, xmax-xmin, -1.5, 0.09)
+    vgl.draw_axis(dev)
+    dev.close()        
+    
+save_cairo("cantor.jpg", fmm.get_gbbox(), 200)
+
+![cantor](https://github.com/uhwang/vgl-core/assets/43251090/b7f9c51b-a052-454a-9454-1724f3705892)
