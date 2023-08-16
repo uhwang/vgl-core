@@ -11,7 +11,6 @@ VGL package for distribution
    - pip install dist\libvgl-0.1-py3-none-any.whl
 
 3. Usage
-   - Python console
    ```Python
    import libvgl as vgl
    vgl.pixel_grid()
