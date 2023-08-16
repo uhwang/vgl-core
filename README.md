@@ -19,10 +19,18 @@ VGL package for distribution
 
 ![libvgl pixelgrid screenshot-](https://github.com/uhwang/vgl-core/assets/43251090/af146b8e-e8e5-4fec-b195-a9cc972080ac)
 
-4. Plot example
+4. Plot example #1
    ```Python
    import libvgl as vgl
-   vgl.test.cardioid()
+   vgl.test.cardioid.save()
 
 
 ![cardioid](https://github.com/uhwang/vgl-core/assets/43251090/25ebb160-e8dc-4a6b-905a-4287c27b6c91)
+
+5. Plot example #2
+   ```Python
+   import libvgal as vgl
+   vgl.test.fractree.save()
+
+
+![fractree](https://github.com/uhwang/vgl-core/assets/43251090/634bfe5a-1678-470f-94ce-e729d0626e6f)
