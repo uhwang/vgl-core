@@ -33,3 +33,29 @@ VGL package for distribution
    vgl.test.fractree.save()
 
 ![fractree](https://github.com/uhwang/vgl-core/assets/43251090/634bfe5a-1678-470f-94ce-e729d0626e6f)
+
+6. Plot example #3
+   ```Python
+   import libvga as vgl
+   vgl.test.epicyloid.save()
+
+![epicycloid](https://github.com/uhwang/vgl-core/assets/43251090/15e35fb7-d78d-4d82-9695-e5b8e89e10f5)
+
+7. Plot example #4
+   ```Python
+   import libvgl as vgl
+   vgl.test.potflow.save()
+   
+![potflow](https://github.com/uhwang/vgl-core/assets/43251090/bc4172ff-68dc-43e3-9de5-f5fc78cbf1b2)   
+
+8. Plot example #5
+   ```Python
+   import libvgl as vgl
+   vgl.test.pramsym.save()
+![pramsym](https://github.com/uhwang/vgl-core/assets/43251090/de515f75-5f42-4921-9fa9-84d25ddf8d4b)  
+
+10. Plot example #6
+    ```Python
+    import libvgl as vgl
+    vgl.test.x2.save()
+![x2](https://github.com/uhwang/vgl-core/assets/43251090/2e66c6af-0b21-4034-b823-2324c7b45ea0)    
