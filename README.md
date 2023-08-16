@@ -62,7 +62,7 @@ VGL package for distribution
     vgl.test.x2.save()
 ![x2](https://github.com/uhwang/vgl-core/assets/43251090/2e66c6af-0b21-4034-b823-2324c7b45ea0)   
 
-11. Cantour Plot
+11. Cantor Plot
 ![cantor](https://github.com/uhwang/vgl-core/assets/43251090/b7f9c51b-a052-454a-9454-1724f3705892)
 ```Python
 import libvgl as vgl
