@@ -56,5 +56,5 @@ vgl.test.fractree.save()
 
 print("... End Test Plot ...")
 
-print("... Pixel Grid ...")
+print("... Pixel Grid GUI ...")
 vgl.pixel_grid()
