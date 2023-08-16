@@ -50,7 +50,7 @@ vgl.test.print_font.save()
 print("... X^2 ...")
 vgl.test.x2.save()
 
-print("... Fractal Tree (skip PPT device ) ...")
+print("... Fractal Tree (skip PPT device because of long run time ) ...")
 print("... If you want pptx, vgl.test.fractree.save(ppt=True) ...")
 vgl.test.fractree.save()
 
