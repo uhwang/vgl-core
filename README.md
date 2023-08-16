@@ -63,6 +63,7 @@ VGL package for distribution
 ![x2](https://github.com/uhwang/vgl-core/assets/43251090/2e66c6af-0b21-4034-b823-2324c7b45ea0)   
 
 11. Cantour Plot
+![cantor](https://github.com/uhwang/vgl-core/assets/43251090/b7f9c51b-a052-454a-9454-1724f3705892)
 ```Python
 import libvgl as vgl
 
@@ -87,8 +88,3 @@ def save_cairo(fname, gbox, dpi):
     dev.close()        
     
 save_cairo("cantor.jpg", fmm.get_gbbox(), 200)
-
-
-
-
--![cantor](https://github.com/uhwang/vgl-core/assets/43251090/b7f9c51b-a052-454a-9454-1724f3705892)
