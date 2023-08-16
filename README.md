@@ -17,4 +17,4 @@ VGL package for distribution
    vgl.pixel_grid()
 
 <img width="354" alt="libvgl pixelgrid" src="https://github.com/uhwang/vgl-core/assets/43251090/7fa911c7-adbd-4f2e-8cfd-31f1f573d242">
-![libvgl pixelgrid screenshot](https://github.com/uhwang/vgl-core/assets/43251090/bd21c81c-cf8d-4cbe-911c-d8c8a5607ef8)
+![libvgl pixelgrid screenshot](https://github.com/uhwang/vgl-core/assets/43251090/3f9b7f6c-71f5-4d46-913d-754c734f0934)
