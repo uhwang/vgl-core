@@ -32,5 +32,4 @@ VGL package for distribution
    import libvgal as vgl
    vgl.test.fractree.save()
 
-
 ![fractree](https://github.com/uhwang/vgl-core/assets/43251090/634bfe5a-1678-470f-94ce-e729d0626e6f)
