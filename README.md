@@ -58,7 +58,13 @@ vgl package for distribution
     import libvgl as vgl
     vgl.test.x2.save()
 
-11. Cantor Plot
+11. Plot example #7
+![fractal_star](https://github.com/uhwang/vgl-core/assets/43251090/7504c830-2b59-43d9-b2ba-6c3ce83e218a)
+    ```Python
+    import libvgl as vgl
+    vgl.test.fractal_star.save()
+        
+13. Cantor Plot
 ![cantor](https://github.com/uhwang/vgl-core/assets/43251090/b7f9c51b-a052-454a-9454-1724f3705892)
    ```Python
    import libvgl as vgl
