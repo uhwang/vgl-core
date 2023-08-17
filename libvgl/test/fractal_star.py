@@ -12,11 +12,8 @@ def draw(dev, xc, yc, edge, level):
 
     p = vgl.geom.Polygon(xc, yc, 5, edge, deg_shift=18)
     xs, ys = p.get_xs(), p.get_ys()
-    dev.line(xc,yc,xs[0],ys[0], ctbl[level])#, lthk=level*dlevel*0.01)
-    dev.line(xc,yc,xs[1],ys[1], ctbl[level])#, lthk=level*dlevel*0.01)
-    dev.line(xc,yc,xs[2],ys[2], ctbl[level])#, lthk=level*dlevel*0.01)
-    dev.line(xc,yc,xs[3],ys[3], ctbl[level])#, lthk=level*dlevel*0.01)
-    dev.line(xc,yc,xs[4],ys[4], ctbl[level])#, lthk=level*dlevel*0.01)
+    for x1, y1 in zip(xs, ys):
+        dev.line(xc, yc, x1, y1, ctbl[level])
 
     if level > 0:
         new_edge = edge*scale
