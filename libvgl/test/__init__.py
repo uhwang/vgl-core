@@ -19,3 +19,4 @@ from . import potflow
 from . import pramsym
 from . import print_font
 from . import x2
+from . import sierpinski
