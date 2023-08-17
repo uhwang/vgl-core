@@ -14,6 +14,7 @@ from . import linetype
 from . import shape
 from . import linepat
 from . import shape
+from . import util
 
 def distP(x1,y1,x2,y2): return np.sqrt((x2-x1)**2+(y2-y1)**2)
 def distV(vlist): return np.sqrt( (vlist[2]-vlist[0])**2+(vlist[3]-vlist[1])**2 )
@@ -95,17 +96,21 @@ class Square(shape.Shape):
 
 class EquiTriangle(shape.Shape):
     def __init__(self,xc,yc,edge,lcol=color.BLACK,lthk=0.001,fcol=None):
-        super().__init__(xc,yc,3,edge,lcol,lthk,fcol,fill)
-        len = edge/np.sqrt(3)
-        leg1 = edge*0.5
-        leg2 = np.sqrt(len**2-leg1**2)
-        self.vertex[0] = xc
-        self.vertex[1] = yc+len
-        self.vertex[2] = xc-leg1
-        self.vertex[3] = yc-leg2
-        self.vertex[4] = xc+leg1
-        self.vertex[5] = yc-leg2
+        super().__init__(xc,yc,3,edge,lcol,lthk,fcol)
+        hgt = edge*np.sin(util.deg_to_rad(60))
+        x1 = edge*0.5
+        # lower left v1
+        self.vertex[0] = xc-x1
+        self.vertex[1] = yc-hgt*0.5
+        
+        # lower right v2
+        self.vertex[2] = xc+x1
+        self.vertex[3] = yc-hgt*0.5
 
+        # center up v3
+        self.vertex[4] = xc
+        self.vertex[5] = yc+hgt*0.5
+        
 class Polygon(shape.Shape):
     def __init__(self,
                 xc, yc, 
