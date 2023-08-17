@@ -54,7 +54,16 @@ print("... Fractal Tree (skip PPT device because of long run time ) ...")
 print("... If you want pptx, vgl.test.fractree.save(ppt=True) ...")
 vgl.test.fractree.save()
 
+print("... Sierpinski ...")
+vgl.test.sierpinski.save()
+
+print("... Fractal Line Star (skip PPT device because of long run time ) ...")
+print("    If you want pptx, vgl.test.fractal_star.save(ppt=True) ...")
+vgl.test.fractal_star.save()
+
 print("... End Test Plot ...")
 
 print("... Pixel Grid GUI ...")
 vgl.pixel_grid()
+
+print("... End of Test ...")
