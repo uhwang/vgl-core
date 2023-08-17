@@ -120,7 +120,8 @@ class Polygon(shape.Shape):
                 lthk=0.001,
                 lpat=linepat._PAT_SOLID,
                 pat_len=0.04, 
-                fcol=None 
+                fcol=None,
+                deg_shift=0
         ):
         super().__init__( xc,yc, 
                           nvert, 
@@ -132,7 +133,7 @@ class Polygon(shape.Shape):
                           pat_len)
         step = 360.0/nvert
         for i in range(nvert):
-            rad = rotation.deg_to_rad(i*step)
+            rad = rotation.deg_to_rad(i*step+deg_shift)
             self.vertex[i*2]=xc+edge*np.cos(rad)
             self.vertex[i*2+1]=yc+edge*np.sin(rad)
             
