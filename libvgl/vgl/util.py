@@ -9,6 +9,9 @@ vgl_rtd= 57.29577951308233
 deg_to_rad = lambda d: d*vgl_dtr
 rad_to_deg = lambda r: r*vgl_rtd
 
+_c = lambda angle, rad: np.cos(angle) if rad==True else np.cos(vgl_dtr*angle)
+_s = lambda angle, rad: np.sin(angle) if rad==True else np.sin(vgl_dtr*angle)
+
 def rot_matrix(angle, rad=True):
 
     if rad:
@@ -40,3 +43,20 @@ def rad_rotation(x, y, angle):
 
     return rotation(x,y,angle)
 
+def rot_about_point(px, py, xs, ys, angle, rad=True, dim=2):
+    c, s = _c(angle, rad), _s(angle, rad)
+    rr   = np.array([
+                [c, -s, px*(1-c)+py*s],  
+                [s,  c, py*(1-c)-px*s],
+                [0,  0,     1        ]
+            ])
+    pnt=np.array([np.dot(rr,(v1,v2,1))[0:dim] for v1,v2 in zip(xs,ys)]).flatten()
+    
+    return pnt[::dim], pnt[1::dim] if dim==2 else\
+           pnt[::dim], pnt[1::dim], pnt[2::dim] 
+    
+def deg_rot_about_point(px, py, xs, ys, angle, dim=2):
+    return rot_about_point(px, py, xs, ys, angle, False, dim)
+    
+def rad_rot_about_point(px, py, xs, ys, angle, dim=2):
+    return rot_about_point(px, py, xs, ys, angle, True, dim)    
