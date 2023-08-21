@@ -23,11 +23,27 @@ class Vertex():
            isinstance(src, tuple):
             self.point = src
             
-    def get_vertices(self): return self.vertex
-    def get_vertex(self, index): return [self.vertex[index*2], self.vertex[index*2+1]]
-    def get_nvertex(self): return int(self.vertex.size/2)
-    def get_xs(self): return self.vertex[::2]
-    def get_ys(self): return self.vertex[1::2]
+    def get_vertices(self): 
+        return self.vertex
+    
+    def get_vertex(self, index): 
+        return [self.vertex[index*2], self.vertex[index*2+1]]
+        
+    def get_nvertex(self): 
+        return int(self.vertex.size/2)
+    
+    def get_xs(self): 
+        return self.vertex[::2]
+    
+    def get_ys(self): 
+        return self.vertex[1::2]
+
+    def get_xss(self): 
+        return np.append(self.vertex[::2], self.vertex[0])
+    
+    def get_yss(self): 
+        return np.append(self.vertex[1::2], self.vertex[1])
+    
     def set_vertex(self, i, x,y): 
         self.vertex[i*2]=x
         self.vertex[i*2+1]=y
@@ -37,6 +53,11 @@ class Vertex():
         self.vertex = np.array([ np.dot(rm, v) 
                                  for v in self.vertex.reshape(self.nvert,2) ]).flatten()
         return self
+        
+    def rotate_about_point(self, px, py, deg):
+        vv = util.deg_rot_about_point(px,py,self.get_xs(), self.get_ys(), deg)
+        self.vertex[::2] = vv[0]
+        self.vertex[1::2] = vv[1]
         
     def npoint(self):
         return self.nvert

@@ -279,11 +279,70 @@ class Box(shape.Shape):
         self.wid= wid
         self.hgt= hgt
         self.viewport = viewport
-        sx1 = sx+wid
-        sy1 = sy+hgt
-        self.vertex.put([0,2,4,6], [sx, sx1, sx1, sx ])
-        self.vertex.put([1,3,5,7], [sy, sy , sy1, sy1])
-            
+        self.leftbottom()
+          
+    #
+    # v1 ---- v4
+    # |        |
+    # |        |
+    # v2 ---- v3
+    #
+    # vertex order: v1 --> v2 --> v3 --> v4
+    
+    def center(self):
+        hw = self.wid*0.5
+        hh = self.hgt*0.5
+        self.vertex.put([0,2,4,6], [self.sx-hw, 
+                                    self.sx+hw, 
+                                    self.sx+hw, 
+                                    self.sx-hw ])
+        self.vertex.put([1,3,5,7], [self.sy-hh, 
+                                    self.sy-hh, 
+                                    self.sy+hh, 
+                                    self.sy+hh])
+        
+    def lefttop(self):
+        self.vertex.put([0,2,4,6], [self.sx, 
+                                    self.sx, 
+                                    self.sx+self.wid, 
+                                    self.sx+self.wid ])
+                                    
+        self.vertex.put([1,3,5,7], [self.sy,
+                                    self.sy-self.hgt, 
+                                    self.sy-self.hgt, 
+                                    self.sy])
+    def righttop(self):
+        self.vertex.put([0,2,4,6], [self.sx-self.wid, 
+                                    self.sx-self.wid, 
+                                    self.sx, 
+                                    self.sx ])
+                                    
+        self.vertex.put([1,3,5,7], [self.sy,
+                                    self.sy-self.hgt, 
+                                    self.sy-self.hgt, 
+                                    self.sy])
+    
+    def leftbottom(self):
+        self.vertex.put([0,2,4,6], [self.sx, 
+                                    self.sx+self.wid, 
+                                    self.sx+self.wid, 
+                                    self.sx ])
+                                    
+        self.vertex.put([1,3,5,7], [self.sy,
+                                    self.sy, 
+                                    self.sy+self.hgt, 
+                                    self.sy+self.hgt])
+    def rightbottom(self):
+        self.vertex.put([0,2,4,6], [self.sx-self.wid, 
+                                    self.sx, 
+                                    self.sx, 
+                                    self.sx-self.wid])
+                                    
+        self.vertex.put([1,3,5,7], [self.sy,
+                                    self.sy, 
+                                    self.sy+self.hgt, 
+                                    self.sy+self.hgt])
+        
     def draw(self, dev):
         if self.viewport==True:
             dev.lpolygon(self.get_xs(), self.get_ys(), 

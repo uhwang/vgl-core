@@ -51,10 +51,14 @@ def rot_about_point(px, py, xs, ys, angle, rad=True, dim=2):
                 [0,  0,     1        ]
             ])
     pnt=np.array([np.dot(rr,(v1,v2,1))[0:dim] for v1,v2 in zip(xs,ys)]).flatten()
+    x= pnt[::dim]
+    y= pnt[1::dim]
     
-    return pnt[::dim], pnt[1::dim] if dim==2 else\
-           pnt[::dim], pnt[1::dim], pnt[2::dim] 
-    
+    if dim == 2:
+        return x,y
+    else:
+        return x, y, pnt[2::dim]
+            
 def deg_rot_about_point(px, py, xs, ys, angle, dim=2):
     return rot_about_point(px, py, xs, ys, angle, False, dim)
     
