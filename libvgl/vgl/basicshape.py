@@ -376,10 +376,10 @@ class Box(shape.Shape):
     def draw(self, dev):
         if self.viewport==True:
             dev.lpolygon(self.get_xs(), self.get_ys(), 
-                         self.lcol, self.lthk*dev.frm.hgt(), self.lpat, self.fcol)
+                         self.lcol, self.lthk, self.lpat, self.fcol)
         else:
             dev.polygon(self.get_xs(), self.get_ys(), 
-                        self.lcol, self.lthk*dev.frm.hgt(), self.lpat, self.fcol)
+                        self.lcol, self.lthk, self.lpat, self.fcol)
         
         
 class StarPolygon(shape.Shape):
