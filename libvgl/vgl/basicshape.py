@@ -272,15 +272,38 @@ class Box(shape.Shape):
                  fcol     = None, 
                  lpat     = linepat._PAT_SOLID,
                  pat_len  = 0.04,  
-                 viewport = False):
+                 viewport = False,
+                 src      = None):
         
         super().__init__(sx, sy, 4, wid, 
                          lcol=lcol, lthk=lthk, fcol=fcol, lpat=lpat, pat_len=pat_len)
         self.wid= wid
         self.hgt= hgt
         self.viewport = viewport
-        self.leftbottom()
-          
+        
+        # copy Box to Box
+        # need to check if size not equal
+        if isinstance(src, Box):
+            self.vertex[:] = src.vertex[:]
+        elif isinstance(src, np.ndarray):
+            self.vertex[:] = src[:]
+        elif isinstance(src, list):
+            self.vertex = np.array(src)
+        else:
+            self.leftbottom()
+    
+    def copy(self):
+        return Box( self.sx, 
+                    self.sy,
+                    self.wid,
+                    self.hgt,
+                    self.lcol,
+                    self.lthk,
+                    self.fcol,
+                    self.lpat,
+                    self.pat_len,
+                    self.viewport,
+                    src = self.vertex )
     #
     # v1 ---- v4
     # |        |
@@ -300,6 +323,7 @@ class Box(shape.Shape):
                                     self.sy-hh, 
                                     self.sy+hh, 
                                     self.sy+hh])
+        return self
         
     def lefttop(self):
         self.vertex.put([0,2,4,6], [self.sx, 
@@ -311,6 +335,8 @@ class Box(shape.Shape):
                                     self.sy-self.hgt, 
                                     self.sy-self.hgt, 
                                     self.sy])
+        return self
+        
     def righttop(self):
         self.vertex.put([0,2,4,6], [self.sx-self.wid, 
                                     self.sx-self.wid, 
@@ -321,7 +347,8 @@ class Box(shape.Shape):
                                     self.sy-self.hgt, 
                                     self.sy-self.hgt, 
                                     self.sy])
-    
+        return self
+        
     def leftbottom(self):
         self.vertex.put([0,2,4,6], [self.sx, 
                                     self.sx+self.wid, 
@@ -332,6 +359,8 @@ class Box(shape.Shape):
                                     self.sy, 
                                     self.sy+self.hgt, 
                                     self.sy+self.hgt])
+        return self
+        
     def rightbottom(self):
         self.vertex.put([0,2,4,6], [self.sx-self.wid, 
                                     self.sx, 
@@ -342,6 +371,7 @@ class Box(shape.Shape):
                                     self.sy, 
                                     self.sy+self.hgt, 
                                     self.sy+self.hgt])
+        return self
         
     def draw(self, dev):
         if self.viewport==True:
