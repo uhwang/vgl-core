@@ -219,10 +219,13 @@ class DeviceSVG(device.DeviceRaster):
         self._lineto(x,y, True)
         
     def polygon(self, x, y, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=None, viewport=False):
+        pat_inst = isinstance(lpat, linepat.LinePattern)
+        
         if lthk:
             _lthk = lthk*self.frm.hgt()
             
-        if lpat == linepat._PAT_SOLID or fcol:
+        # solid line
+        if pat_inst==False or fcol:
             self.fp.write("<polygon points=\"")
             if viewport:
                 self.create_pnt_list(x,y,self.get_xl,self.get_yl)
@@ -230,7 +233,7 @@ class DeviceSVG(device.DeviceRaster):
                 self.create_pnt_list(x,y,self._x_pixel,self._y_pixel)
                 
             if lcol and fcol:
-                if lpat == linepat._PAT_SOLID:
+                if pat_inst == False:
                     self.fp.write(_polygon_format_end%(\
                         lcol.r, lcol.g, lcol.b, self._svg_lthk(_lthk),
                         fcol.r, fcol.g, fcol.b))
@@ -242,7 +245,7 @@ class DeviceSVG(device.DeviceRaster):
             else:
                 self.fp.write(_polygon_format_end_nostroke%(fcol.r, fcol.g, fcol.b))
 
-        if lcol and isinstance(lpat, linepat.LinePattern):
+        if lcol and pat_inst:
             if isinstance(x, np.ndarray):
                 xp = np.append(x, x[0])
                 yp = np.append(y, y[0])
@@ -318,7 +321,7 @@ class DeviceSVG(device.DeviceRaster):
                         self._svg_lthk(_lthk)))
                       
     def lpolygon(self, x, y, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=None):
-        self.polygon(x,y,lcol,lthk,fcol,lpat,viewport=True)
+        self.polygon(x,y,lcol,lthk,lpat,fcol,viewport=True)
 
     def lpolyline(self, x, y, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, closed=False):
         self.polyline(x,y,lcol,lthk,lpat,closed,viewport=True)

@@ -90,17 +90,22 @@ class DeviceEMF(device.DeviceRaster):
     def polygon(self, x, y, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=None, viewport=False):
         pat_inst = isinstance(lpat, linepat.LinePattern)
 
-        if (pat_inst ==False and lcol) or fcol:
+        if pat_inst ==False and (lcol or fcol):
             if viewport:
                 px = [int(self.get_xl(xx)) for xx in x]
                 py = [int(self.get_yl(yy)) for yy in y]
             else:
                 px = [int(self._x_pixel(xx)) for xx in x]
                 py = [int(self._y_pixel(yy)) for yy in y]
-            if isinstance(lcol, color.Color) and lpat == linepat._PAT_SOLID:
+                
+            # line, no fill
+            if     isinstance(lcol, color.Color) and\
+               not isinstance(fcol, color.Color):
+               
                 self.dev.Polygon(px,py,lcol, 
-                                 int(self.get_ylt(lthk*self.frm.hgt())),fcol)
-            elif fcol:
+                                 int(self.get_ylt(lthk*self.frm.hgt())),None)
+            # no line, fill
+            else:
                 self.dev.Polygon(px,py,None, None, fcol)
     
         if lcol and pat_inst:

@@ -15,15 +15,23 @@ _ARROWTYPE_OPEN         = 0x0001
 _ARROWTYPE_CLOSED       = 0x0002
 _ARROWTYPE_CLOSEDFILLED = 0x0003
 _ARROWTYPE_CLOSEDBLANK  = 0x0004
-_ARROWTYPE_VIKING       = 0x0005
-_ARROWTYPE_DOT          = 0x0006
+_ARROWTYPE_DOT          = 0x0005
+_ARROWTYPE_VIKING       = 0x0010|_ARROWTYPE_CLOSED
+_ARROWTYPE_VIKINGFILLED = 0x0010|_ARROWTYPE_CLOSEDFILLED
+_ARROWTYPE_VIKINGBLANK  = 0x0010|_ARROWTYPE_CLOSEDBLANK
 
-_ARROWPOS_START         = 0x0007
-_ARROWPOS_END           = 0x0008
+_END_TYPE               = _ARROWTYPE_DOT
+_ARROWPOS_START         = _END_TYPE+1
+_ARROWPOS_END           = _END_TYPE+2
+
+_HEAD_CLOSED       = lambda b : b & _ARROWTYPE_CLOSED
+_HEAD_CLOSEDFILLED = lambda b : b & _ARROWTYPE_CLOSEDFILLED
+_HEAD_CLOSEDBLANK  = lambda b : b & _ARROWTYPE_CLOSEDBLANK
 
 _arrow_angle         = 15 # degree
 _arrow_length_0      = 0.01 # 
 _arrow_length_1      = 0.05 # 
+_viking_xpos_scale   = 0.7
 #_arrowhead_start = "START"
 #_arrowhead_end = "END"
 
@@ -65,14 +73,18 @@ class ArrowHead():
         wing = self.length*frm.hgt()
         wing_x = wing*np.cos(util.deg_to_rad(self.angle))
         wing_y = wing*np.sin(util.deg_to_rad(self.angle))
+        vk_x   = wing_x*_viking_xpos_scale
+        vk_y   = 0
         
         if self.pos_t == _ARROWPOS_START:
             self.wing_up   = util.rad_rotation(wing_x,  wing_y, -theta)
             self.wing_down = util.rad_rotation(wing_x, -wing_y, -theta)
+            self.vk        = util.rad_rotation(  vk_x,    vk_y, -theta)
         else:
             self.wing_up   = util.rad_rotation(-wing_x,  wing_y, -theta)
             self.wing_down = util.rad_rotation(-wing_x, -wing_y, -theta)
-
+            self.vk        = util.rad_rotation(  -vk_x,    vk_y, -theta)
+            
 def draw_arrow_head(dev, sx, sy, arrow, lcol, lthk, viewport):
     
     sx = dev._x_viewport(sx) if viewport==False else sx
@@ -81,20 +93,31 @@ def draw_arrow_head(dev, sx, sy, arrow, lcol, lthk, viewport):
     
     if viewport == False:
         ys = [sy+arrow.wing_up[1], sy, sy+arrow.wing_down[1], sy+arrow.wing_up[1]]
+        vky= sy+arrow.vk[1]
     else:
         ys = [sy-arrow.wing_up[1], sy, sy-arrow.wing_down[1], sy-arrow.wing_up[1]]
-    
+        vky= sy-arrow.vk[1]
+
+    if arrow.type_t == _ARROWTYPE_VIKING or\
+       arrow.type_t == _ARROWTYPE_VIKINGFILLED or\
+       arrow.type_t == _ARROWTYPE_VIKINGBLANK:
+        xs.insert(-1,sx+arrow.vk[0])
+        ys.insert(-1,vky)
+        
     # open
     if arrow.type_t == _ARROWTYPE_OPEN:
         dev.lpolyline(xs[:3], ys[:3], lcol, lthk)
         
-    elif arrow.type_t == _ARROWTYPE_CLOSED:
+    #elif arrow.type_t == _ARROWTYPE_CLOSED:
+    elif _HEAD_CLOSED(arrow.type_t):
         dev.lpolygon(xs, ys, lcol=lcol, lthk=lthk, fcol=None)
         
-    elif arrow.type_t == _ARROWTYPE_CLOSEDFILLED:
+    #elif arrow.type_t == _ARROWTYPE_CLOSEDFILLED:
+    elif _HEAD_CLOSEDFILLED(arrow.type_t):
         dev.lpolygon(xs, ys, lcol=lcol, lthk=lthk, fcol=lcol)
         
-    elif arrow.type_t == _ARROWTYPE_CLOSEDBLANK:
+    #elif arrow.type_t == _ARROWTYPE_CLOSEDBLANK:
+    elif _HEAD_CLOSEDBLANK(arrow.type_t):
         dev.lpolygon(xs, ys, lcol=lcol, lthk=lthk, fcol=color.WHITE)
 
 # lcol, lthk, len_pat, pat_t

@@ -15,6 +15,7 @@ from . import drawgrid
 from . import drawlabel
 from . import util
 from . import text
+from . import basicshape
 
 def draw_axis(dev):
 
@@ -36,6 +37,15 @@ def draw_axis(dev):
             yy = dev._y_viewport(pos_y)
             dev.lline(x1, yy, x2, yy, xaxis.lcol, xaxis.lthk)
         
+            if xaxis.arrow_start:
+                sa = basicshape.ArrowHead(dev.frm, xmin, pos_y, xmax, pos_y,True)
+                basicshape.draw_arrow_head(dev, xmin, pos_y, sa, xaxis.lcol, xaxis.lthk,False)
+                
+            if xaxis.arrow_end:
+                ea = basicshape.ArrowHead(dev.frm, xmin, pos_y, xmax, pos_y,True,
+                                          pos_t = basicshape._ARROWPOS_END)
+                basicshape.draw_arrow_head(dev, xmax, pos_y, sa, xaxis.lcol, xaxis.lthk,False)
+            
         #draw y-axis
         if yaxis.show:
             pos_x = axis.get_yaxis_xpos(xaxis,yaxis)
@@ -43,6 +53,16 @@ def draw_axis(dev):
             y2 = dev._y_viewport(ymax)
             xx = dev._x_viewport(pos_x)
             dev.lline(xx, y1, xx, y2, yaxis.lcol, yaxis.lthk)
+            
+            if yaxis.arrow_start:
+                sa = basicshape.ArrowHead(dev.frm, pos_x, ymin, pos_x, ymax, pos_y,True)
+                basicshape.draw_arrow_head(dev, pos_x, ymin, sa, yaxis.lcol, yaxis.lthk,False)
+                
+            if yaxis.arrow_end:
+                ea = basicshape.ArrowHead(dev.frm, pos_x, ymin, pos_x, ymax, pos_y,True, 
+                                          pos_t = basicshape._ARROWPOS_END)
+                basicshape.draw_arrow_head(dev, pos_x, ymax, sa, yaxis.lcol, yaxis.lthk,False)
+
         drawtick.draw_tick(dev)
         drawgrid.draw_grid(dev)
         drawlabel.draw_label(dev)
