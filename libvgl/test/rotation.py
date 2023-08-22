@@ -8,14 +8,14 @@ fmm = vgl.FrameManager()
 frm = fmm.create(1,1,6,6, data)
 gbox = fmm.get_gbbox()
 
-box1 = vgl.basicshape.Box(-2,0,2,2,vgl.color.RED)
-box2 = vgl.basicshape.Box(-2,0,2,2,vgl.color.BLUE)
-box3 = vgl.basicshape.Box(1.5,1.5,2,2,vgl.color.GREEN)
-box4 = vgl.basicshape.Box(1.5,1.5,2,2,vgl.color.MAGENTA)
-box5 = vgl.basicshape.Box(2,-2,2,2,vgl.color.CYAN)
-box6 = vgl.basicshape.Box(2,-2,2,2,vgl.color.CYAN).rotate(-45)
+box1 = vgl.basicshape.Box( -2,  0,2,2,vgl.color.RED, 0.006)
+box2 = vgl.basicshape.Box( -2,  0,2,2,vgl.color.BLUE, 0.006)
+box3 = vgl.basicshape.Box(1.5,1.5,2,2,vgl.color.GREEN, 0.006)
+box4 = vgl.basicshape.Box(1.5,1.5,2,2,vgl.color.MAGENTA, 0.006)
+box5 = vgl.basicshape.Box(  2, -2,2,2,vgl.color.CYAN, 0.006)
+box6 = box5.copy().rotate(-45)
 
-box2.rotate_about_point(-2,0,45)
+box2.rotate_about_point( -2,  0,45)
 box4.rotate_about_point(1.5,1.5,45)
 
 def draw(dev):
@@ -32,6 +32,7 @@ def draw(dev):
 
 def save():
     from . import chkfld
+    #import chkfld
     
     if not chkfld.create_folder("./rotation"):
         return
