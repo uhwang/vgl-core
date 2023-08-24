@@ -22,3 +22,4 @@ from . import x2
 from . import sierpinski
 from . import fractal_star
 from . import rotation
+from . import uplate
