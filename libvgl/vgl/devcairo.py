@@ -135,8 +135,9 @@ class DeviceIMG(device.DeviceRaster):
                 self.create_pnt_list(x,y,self.get_xl,self.get_yl)
             else:
                 self.create_pnt_list(x,y,self._x_pixel,self._y_pixel)
-            self.cntx.close_path()        
-            self.draw_geometry(lcol, lthk*self.frm.hgt(), lpat, fcol)
+            self.cntx.close_path()
+            _lthk = lthk*self.frm.hgt() if lthk else lthk
+            self.draw_geometry(lcol, _lthk, lpat, fcol)
 
         if lcol and isinstance(lpat, linepat.LinePattern):
             if isinstance(x, np.ndarray):
