@@ -17,12 +17,9 @@ def solveMatrix(A, x, b, nx):
     
     n = nx
     for i in range(n-1):
-    #for(i=0i<(n-1)i++)
         for j in range(i+1,n):
-        #for(j=(i+1)j<nj++)
             ratio = A[j][i] / A[i][i]
-            for count in range(i, n):
-            #for(count=icount<ncount++) 
+            for count in range(i, n): 
                 A[j][count] -= (ratio * A[i][count])
             b[j] -= (ratio * b[i])
     
@@ -31,10 +28,8 @@ def solveMatrix(A, x, b, nx):
     
     i=n-2
     while i>=0:
-    #for(i=(n-2)i>=0i--)
         temp = b[i]
         for j in range(i+1, n):
-        #for(j=(i+1)j<nj++)
             temp -= (A[i][j] * x[j])
         x[i] = temp / A[i][i]
         i -= 1
@@ -47,8 +42,6 @@ def getVelocity_UPlate(gam, xv, uu, vv, xs, ys, npan):
     velu, velv = 0,0
     
     for j in range(npan):
-    #for(j = 0 j < npan j++)
-    
         r2 = (xs-xv[j])*(xs-xv[j])+ys*ys
         velu += -gam[j]*ys/r2
         velv += -gam[j]*(xs-xv[j])/r2
@@ -174,8 +167,7 @@ def save():
     
     if not chkfld.create_folder("./uplate"):
         return
-            
-            
+                 
     lines = U_Plate(10, -1,miny,maxx,maxy, 100, 50)
     
     dev_img = vgl.DeviceIMG("./uplate/uplate.jpg", fmm.get_gbbox(), 200)
