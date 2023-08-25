@@ -38,7 +38,6 @@ def getVelocity_UPlate(gam, xv, uu, vv, xs, ys, npan):
     
     j=0
     r2=0
-    
     velu, velv = 0,0
     
     for j in range(npan):
@@ -98,13 +97,9 @@ def U_Plate(alpha, minx, miny, maxx, maxy, nsgx, nsgy):
         xc[i] = (3+4*i)*chord/(npan*4)
         b[i]  = rhs
     
-    
     for i in range(npan):
-    #for(i = 0 i < npan i++)
         for j in range(npan):
-        #for(j = 0 j < npan j++)
-            A[i][j] = 1.0/(xc[i]-xv[j])
-        
+            A[i][j] = 1.0/(xc[i]-xv[j])     
     
     solveMatrix(A, gam, b, npan)
     
@@ -113,7 +108,6 @@ def U_Plate(alpha, minx, miny, maxx, maxy, nsgx, nsgy):
     
     uu = (U*np.cos(alrad))
     vv = (U*np.sin(alrad))
-    
     stream_lines = list()
     
     for j in range(nsgy): 
@@ -122,7 +116,6 @@ def U_Plate(alpha, minx, miny, maxx, maxy, nsgx, nsgy):
         ys = gridy[j]
         sub_lines.append((xs,ys))
         while True: 
-        
             xm1p, ym1p = Euler_UPlate(gam, xv, uu, vv, xs, ys, npan, dell)
             if( xm1p < minx or\
                 xm1p > maxx or\
@@ -162,8 +155,8 @@ def plot(dev, frm, lines, lthk1=0.004, lthk2=0.002, axis=True):
     dev.delete_clip()
     
 def save():
-    #from . import chkfld
-    import chkfld
+    from . import chkfld
+    #import chkfld
     
     if not chkfld.create_folder("./uplate"):
         return
