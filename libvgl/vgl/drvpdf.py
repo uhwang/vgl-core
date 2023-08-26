@@ -173,6 +173,38 @@ class PDFDriver():
     def Polygon(self, x, y, lcol, lthk, fcol):
         self.Polyline(x,y,lcol,lthk,fcol,True)
         
+    # newpath n
+    # rawRect "%.3f %.3f %.3f %.3f re\n", x, y, w, h);
+    # clip    W
+    # newpath n
+    def CreateClip(self, sx, sy, ex, ey):
+        self.cur_obj_index += 1
+        w, h = ex-sx, ey-sy
+        buffer_2 = "nq\nn\n%3.4f %3.4f %3.4f %3.4f re\nW\nn\n"%(sx, sy, w, h)
+        
+        if self.compression:
+            buffer_2 = zlib.compress(bytes(buffer2, 'utf-8'))
+        else:
+            buffer_2 = bytes(buffer2, 'utf-8')
+        
+        buffer_1 = "%d 0 obj\n<</Length %d>>\nstream\n"%(
+                    self.cur_obj_index,
+                    len(buffer_2))
+        buffer_3 = "endstream\nendobj\n"
+        self.obj_list[self.cur_obj_index] = bytes(buffer_1+buffer_2+buffer_3,'utf-8')
+        
+    # W	  Sets the clipping path to the path that is currently being constructed.
+    # W*  Sets the clipping path to the intersection of the current clipping path 
+    #     and the    path that is currently being constructed.
+    def DeleteClip(self):
+        self.cur_obj_index += 1
+        buffer_2 = "Q\n"
+        buffer_1 = "%d 0 obj\n<</Length %d>>\nstream\n"%(
+                    self.cur_obj_index,
+                    len(buffer_2))
+        buffer_3 = "endstream\nendobj\n"
+        self.obj_list[self.cur_obj_index] = bytes(buffer_1+buffer_2+buffer_3,'utf-8')
+                
     def Close(self):
         ex = self.wid*_points_inch
         ey = self.hgt*_points_inch
@@ -233,29 +265,7 @@ class PDFDriver():
         self.fp.write(bytes("%%EOF",'utf-8'))
         self.fp.close()
         
-    def CreateClip(self, sx, sy, ex, ey):
-        #pass
-        #self.cur_obj_index += 1
-        self.clip_region = size.BBox(sx,sy,ex,ey)
-        #self.clip = True
-        #buffer_2 = "q\n%3.4f %3.4f %3.4f %3.4f re\nW\n"
-        #buffer_1 = "%d 0 obj\n<</Length %d>>\nstream\n"%(
-        #            self.cur_obj_index,
-        #            len(buffer_2))
-        #buffer_3 = "endstream\nendobj\n"
-        #self.obj_list[self.cur_obj_index] = bytes(buffer_1+buffer_2+buffer_3,'utf-8')
-        
-    def DeleteClip(self):
-        #pass
-        self.clip_region = None
-        #self.cur_obj_index += 1
-        #buffer_2 = "Q\n"
-        #buffer_1 = "%d 0 obj\n<</Length %d>>\nstream\n"%(
-        #            self.cur_obj_index,
-        #            len(buffer_2))
-        #buffer_3 = "endstream\nendobj\n"
-        #self.obj_list[self.cur_obj_index] = bytes(buffer_1+buffer_2+buffer_3,'utf-8')
-        
+
     
       
    
