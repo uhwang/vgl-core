@@ -10,13 +10,14 @@ from . import color
 from . import device
 from . import linepat
 from . import patline
+from . gdiobj import Pen, Brush
         
 class DeviceIPycanvas(device.DeviceRaster):
     def __init__(self, gbox, dpi):
         super().__init__(gbox, dpi)
         self.pen   = Pen()
-        self.prv_pen = device.Pen()
-        self.brush = device.Brush()
+        self.prv_pen = Pen()
+        self.brush = Brush()
         self.pos   = device.Position(0,0)
         self.canvas= Canvas(width=self.gwid, height=self.ghgt)
         self.lcol  = color.WHITE
@@ -24,7 +25,7 @@ class DeviceIPycanvas(device.DeviceRaster):
         #self.fill_white()
         self.nlineto = 0
         
-    def set_device(self, frm, extend=_FIT_NONE):
+    def set_device(self, frm, extend=device._FIT_NONE):
         self.set_plot(frm, extend)
                 
     def set_pixel(self, x, y, col):
