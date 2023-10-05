@@ -108,7 +108,7 @@ class DevicePDF(device.DeviceVector):
         pat_inst = isinstance(lpat, linepat.LinePattern)
 
         #if lthk: 
-        if not self.pen:
+        if not self.pen and lthk:
             _lthk = lthk*self.frm.hgt()*drvpdf._points_inch
             
         if (pat_inst ==False and lcol) or fcol:

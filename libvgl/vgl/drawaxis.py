@@ -38,12 +38,13 @@ def draw_axis(dev):
             dev.lline(x1, yy, x2, yy, xaxis.lcol, xaxis.lthk)
         
             if xaxis.arrow_start:
-                sa = basicshape.ArrowHead(dev.frm, xmin, pos_y, xmax, pos_y,True)
+                sa = basicshape.ArrowHead(dev.frm, xmin, pos_y, xmax, pos_y,True,xaxis.lcol,
+                                          basicshape._ARROWPOS_START)
                 basicshape.draw_arrow_head(dev, xmin, pos_y, sa, xaxis.lcol, xaxis.lthk,False)
                 
             if xaxis.arrow_end:
-                ea = basicshape.ArrowHead(dev.frm, xmin, pos_y, xmax, pos_y,True,
-                                          pos_t = basicshape._ARROWPOS_END)
+                ea = basicshape.ArrowHead(dev.frm, xmin, pos_y, xmax, pos_y,True,xaxis.lcol,
+                                          basicshape._ARROWPOS_END)
                 basicshape.draw_arrow_head(dev, xmax, pos_y, sa, xaxis.lcol, xaxis.lthk,False)
             
         #draw y-axis

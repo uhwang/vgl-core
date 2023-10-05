@@ -196,7 +196,7 @@ class Frame():
         self.fvtx.set_vertex(2, self.bbox.ex, self.bbox.ey)
         self.fvtx.set_vertex(3, self.bbox.ex, self.bbox.sy)
         
-    def get_clip    (self):                   # clip region is equal to plot domain
+    def get_clip    (self):  # clip region is equal to plot domain
         return self.pvtx.get_vertex(0)+self.pvtx.get_vertex(2)
         
     def get_frm_xs  (self): return self.fvtx.get_xs() # frame vertex x-coordinates

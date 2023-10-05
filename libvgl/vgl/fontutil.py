@@ -4,6 +4,7 @@ fontutil.py
 7/30/2023
 
 '''
+from pathlib import Path, PurePath
 
 from . import paper
 from . import size
@@ -15,20 +16,21 @@ from . import color
 from . import fontid
 from . import fontm
 
-def print_hershey_font(font_id, dev_name, path=None):
+def print_hershey_font(font_id, dev_name, lthk=0.002, path=None):
  
     if fontid._valid_fid(font_id):
     
         font_name = fontm.get_font_name(font_id)
-        fname = "%s/%s-table"%(path,font_name) if path else "%s-table"%font_name 
+        fname = Path("%s/%s-table"%(path,font_name) if path else "%s-table"%font_name)
         
-        dev = devutil.open_device(dev_name, fname)
+        dev = devutil.open_device(dev_name, str(fname))
         
         if dev:
             gbox = dev.frm.bbox
             fh= dev.frm.hgt()
             fw= dev.frm.wid()
             tx= text.Text()
+            tx.lthk = lthk
             sx= gbox.sx
             sy= gbox.sy
             ex= gbox.ex

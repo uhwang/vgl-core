@@ -3,8 +3,6 @@ __VERSION__ = __version__
 
 from . frame      import *
 from . data       import *
-from . device     import *
-from . device     import *
 from . color      import *
 from . size       import *
 from . symbol     import *
@@ -23,7 +21,9 @@ from . linetype   import *
 from . util       import *
 from . drawfrm    import *
 from . drawgrid   import *
+from . device     import *
 from . devwmf     import *
+from . devicanv   import *
 from . devemf     import *
 from . devcairo   import *
 from . devpdf     import *

@@ -72,7 +72,8 @@ class DeviceIPycanvas(device.DeviceRaster):
         self.nlineto += 1
 
     def stroke(self):
-        self.canvas
+        #self.canvas
+        pass
         
     def create_pnt_list(self, x, y, convx, convy):
         self.points= [[convx(x1), convy(y1)] for x1, y1 in zip(x,y)]
@@ -142,9 +143,13 @@ class DeviceIPycanvas(device.DeviceRaster):
         #self.polygon(px, py, sym.lcol, sym.lthk, sym.fcol)
         self.draw_geometry(sym.lcol, sym.lthk, sym.fcol)
 
-    def line(self, sx, sy, ex, ey, lcol=None, lthk=None, lpat=linepat._PAT_SOLID):
-        if lcol: 
-            self.make_pen(lcol, lthk)
+    def line(self, sx, sy, ex, ey, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID):
+        #if lcol: 
+        #    self.make_pen(lcol, lthk)
+        pen_created = False
+        if not isinstance(self.pen.lcol, color.Color) and lcol:
+            self.make_pen(lcol, lthk*self.frm.hgt())
+            pen_created = True
             
         if isinstance(lpat, linepat.LinePattern):
             xp = [sx, ex]
@@ -153,10 +158,10 @@ class DeviceIPycanvas(device.DeviceRaster):
             for p1 in pat_seg:
                 x1 = [ p2[0] for p2 in p1 ]
                 y1 = [ p2[1] for p2 in p1 ]
-                self.cntx.move_to(self.get_xl(x1[0]),self.get_yl(y1[0]))
+                self.canvas.move_to(self.get_xl(x1[0]),self.get_yl(y1[0]))
                 for x2, y2 in zip(x1, y1):
-                    self.cntx.line_to(self.get_xl(x2),self.get_yl(y2))
-                self.cntx.stroke()
+                    self.canvas.line_to(self.get_xl(x2),self.get_yl(y2))
+            self.canvas.stroke()
         else:        
             x1 = int(self._x_pixel(sx))
             y1 = int(self._y_pixel(sy))

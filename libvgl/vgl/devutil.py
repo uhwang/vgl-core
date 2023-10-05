@@ -49,7 +49,7 @@ _g_w     = 0
 _g_h     = 5
 _g_fid   = 999
 
-def open_device(dev_name, fn):
+def open_device(dev_name, fn, dpi=_default_dev_dpi):
     global _p_dev, _p_data, _p_frm, _g_left, _g_top, _g_h, _g_w
     
     w, h = paper.get_paper_letter_inch()
@@ -59,7 +59,7 @@ def open_device(dev_name, fn):
     gbbox = _p_frm.bbox
 
     if dev_name == _dev_img:
-        _p_dev = devcairo.DeviceIMG("%s.png"%fn, gbbox, _default_dev_dpi)
+        _p_dev = devcairo.DeviceIMG("%s.png"%fn, gbbox, dpi)
     elif dev_name == _dev_wmf:
         _p_dev = devwmf.DeviceWMF("%s.wmf"%fn, gbbox)    
     elif dev_name == _dev_emf:
@@ -67,7 +67,7 @@ def open_device(dev_name, fn):
     elif dev_name == _dev_pdf:
         _p_dev = devpdf.DevicePDF("%s.pdf"%fn, gbbox)    
     elif dev_name == _dev_svg:
-        _p_dev = devsvg.DeviceSVG("%s.svg"%fn, gbbox, _default_dev_dpi)    
+        _p_dev = devsvg.DeviceSVG("%s.svg"%fn, gbbox, dpi)    
     elif dev_name == _dev_ppt:
         _p_dev = devppt.DevicePPT("%s.ppt"%fn, gbbox)  
     else:

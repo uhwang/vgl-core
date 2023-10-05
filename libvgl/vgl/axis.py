@@ -285,7 +285,21 @@ class Axis(LineLevelC):
         self.nminor_tick         = 4
         self.update_tick(amin, amax)
         self.label               = Label()
+        self.arrow_start         = False
+        self.arrow_end           = False
 
+    def arrow_start_on(self): self.arrow_start = True
+    def arrow_start_off(self):self.arrow_start = False
+    def arrow_end_on(self):   self.arrow_end = True
+    def arrow_end_off(self):  self.arrow_end = False
+    def arrow_on(self): 
+        self.arrow_start_on()
+        self.arrow_end_on()
+        
+    def arrow_off(self): 
+        self.arrow_start_off()
+        self.arrow_end_off()
+    
     def update_range(self, amin, amax):
         self.amin = amin
         self.amax = amax

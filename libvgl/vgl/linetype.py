@@ -54,7 +54,7 @@ class LineLevelC(LineLevelA):
     def __str__(self):
         return "LineLevelC\nColor: %s\nThink: %f"\
         %(str(self.lcol), self.lthk)		
-        
+
 def main():
     x=LineLevelC()
 	

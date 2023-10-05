@@ -172,30 +172,53 @@ class PDFDriver():
         
     def Polygon(self, x, y, lcol, lthk, fcol):
         self.Polyline(x,y,lcol,lthk,fcol,True)
-        
+    
+    # save    nq  ... save graphics state for remove clip
     # newpath n
-    # rawRect "%.3f %.3f %.3f %.3f re\n", x, y, w, h);
+    # rawRect "%.3f %.3f %.3f %.3f re\n", x, y, w, h
     # clip    W
     # newpath n
     def CreateClip(self, sx, sy, ex, ey):
         self.cur_obj_index += 1
         w, h = ex-sx, ey-sy
-        buffer_2 = "nq\nn\n%3.4f %3.4f %3.4f %3.4f re\nW\nn\n"%(sx, sy, w, h)
+        buffer_2 = ["q\nn\n"]
+        buffer_2.append(_CTM%(self.hgt*_points_inch))
+        buffer_2.append("%3.4f %3.4f %3.4f %3.4f re\nW\nnWn"%(sx, sy, w, h))
         
         if self.compression:
-            buffer_2 = zlib.compress(bytes(buffer2, 'utf-8'))
+            buffer_2 = zlib.compress(bytes(''.join(buffer2), 'utf-8'))
         else:
-            buffer_2 = bytes(buffer2, 'utf-8')
+            buffer_2 = bytes(''.join(buffer_2), 'utf-8')
         
         buffer_1 = "%d 0 obj\n<</Length %d>>\nstream\n"%(
                     self.cur_obj_index,
                     len(buffer_2))
         buffer_3 = "endstream\nendobj\n"
-        self.obj_list[self.cur_obj_index] = bytes(buffer_1+buffer_2+buffer_3,'utf-8')
-        
+        self.obj_list[self.cur_obj_index] = bytes(buffer_1, 'utf-8')+\
+                                            buffer_2+\
+                                            bytes(buffer_3,'utf-8')
+    # Q   Restore graphics state    
     # W	  Sets the clipping path to the path that is currently being constructed.
     # W*  Sets the clipping path to the intersection of the current clipping path 
     #     and the    path that is currently being constructed.
+    
+    # Create and delete clip must be inside one stream unit.
+    # Ex:   
+    #   6 0 obj
+    #   <</Length 64>>
+    #   stream
+    #   0.0000 G
+    #   0.2000 w
+    #   q
+    #   n
+    #   108.000 288.000 432.000 288.000 re
+    #   W
+    #   n
+    #   ...... Drawing ......   
+    #   Q 
+    #   endstream
+    #   endobj
+    
     def DeleteClip(self):
         self.cur_obj_index += 1
         buffer_2 = "Q\n"
