@@ -34,6 +34,13 @@ _viking_xpos_scale   = 0.7
 #_arrowhead_start = "START"
 #_arrowhead_end = "END"
 
+BOX_POS_CENTER      = 0x100000 
+BOX_POS_LEFTTOP     = 0x100001
+BOX_POS_LEFTBOTTOM  = 0x100002
+BOX_POS_RIGHTTOP    = 0x100003
+BOX_POS_RIGHTBOTTOM = 0x100004
+ 
+ 
 class ArrowHead():
     def __init__(self, 
                  frm, 
@@ -282,7 +289,7 @@ class EndArrowLine(GenericLine):
                          length  = length, 
                          viewport= viewport)
         self.begin_arrow.show = False
-        
+ 
 class Box(shape.Shape):
     def __init__(self, 
                  sx, 
@@ -295,6 +302,7 @@ class Box(shape.Shape):
                  lpat     = linepat._PAT_SOLID,
                  pat_len  = 0.04,  
                  viewport = False,
+                 pos_t    = BOX_POS_LEFTBOTTOM, 
                  src      = None):
         
         super().__init__(sx, sy, 4, wid, 
@@ -312,8 +320,12 @@ class Box(shape.Shape):
         elif isinstance(src, list):
             self.vertex = np.array(src)
         else:
-            self.leftbottom()
-    
+            if   pos_t == BOX_POS_LEFTBOTTOM : self.leftbottom()
+            elif pos_t == BOX_POS_LEFTTOP    : self.lefttop()
+            elif pos_t == BOX_POS_RIGHTBOTTOM: self.rightbottom()
+            elif pos_t == BOX_POS_RIGHTTOP   : self.righttop()
+            elif pos_t == BOX_POS_CENTER     : self.center()
+            
     def copy(self):
         return Box( self.sx, 
                     self.sy,
