@@ -72,8 +72,13 @@ vgl package for distribution
 ![uplate](https://github.com/uhwang/vgl-core/assets/43251090/230b1043-262d-4252-9ce3-677b0d930d21)
     ```Python
     import libvgl as vgl
-    vgl.test.uplate.save()        
-15. Cantor Plot
+    vgl.test.uplate.save()
+14. Plot example #10
+![pythatree](https://github.com/uhwang/vgl-core/assets/43251090/f53fba84-bddb-44f3-a3b3-15da392e29a5)
+    ```Python
+    import libvgl as vgl
+    vgl.test.pythatree.save() 
+16. Cantor Plot
 ![cantor](https://github.com/uhwang/vgl-core/assets/43251090/b7f9c51b-a052-454a-9454-1724f3705892)
    ```Python
    import libvgl as vgl
