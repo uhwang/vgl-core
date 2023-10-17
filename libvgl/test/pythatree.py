@@ -5,7 +5,7 @@ data = vgl.Data(-10,10,0,20)
 fmm = vgl.FrameManager()
 frm = fmm.create(1,1,6,6, data)
 gbox= fmm.get_gbbox()
-
+lthk = 0.0001
 deg_lbox = vgl.util.rad_to_deg(math.acos(4*0.2)) # 4/5
 deg_rbox = vgl.util.rad_to_deg(math.acos(3*0.2)) # 3/5
 
@@ -18,9 +18,9 @@ def pytha_tree(dev, v1, v2, angle, length, order):
     ak= angle+deg_lbox
     am= angle-deg_rbox
     
-    box1 = vgl.basicshape.Box(v1[0], v1[1],k,k, lcol=None, fcol=ctbl[int(length-1)])
+    box1 = vgl.basicshape.Box(v1[0], v1[1],k,k, lthk=lthk, fcol=ctbl[int(length-1)])
     box1.rotate_about_point(v1[0],v1[1], ak)
-    box2 = vgl.basicshape.Box(v2[0], v2[1],m,m,pos_t=vgl.basicshape.BOX_POS_RIGHTBOTTOM, lcol=None, fcol=ctbl[int(length-1)])
+    box2 = vgl.basicshape.Box(v2[0], v2[1],m,m,pos_t=vgl.basicshape.BOX_POS_RIGHTBOTTOM, lthk=lthk, fcol=ctbl[int(length-1)])
     box2.rotate_about_point(v2[0],v2[1], am)
 
     box1.draw(dev)
