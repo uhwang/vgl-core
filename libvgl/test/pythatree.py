@@ -46,7 +46,7 @@ def draw(dev):
     dlength = 1./(length-1)*0.5
     ctbl = vgl.create_color_table(0,240, 0.8, 1, length)
     v1, v2 = (0,3+yshift), (3,3+yshift)
-    box = vgl.basicshape.Box(0,yshift, 3, 3, lcol=None, fcol=ctbl[int(length-1)])
+    box = vgl.basicshape.Box(0,yshift, 3, 3, lthk=lthk, fcol=ctbl[int(length-1)])
     box.draw(dev)
     pytha_tree(dev, box.get_vertex(3), box.get_vertex(2), 0, length*0.8, order)
     vgl.draw_axis(dev)
