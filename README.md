@@ -74,7 +74,7 @@ vgl package for distribution
     import libvgl as vgl
     vgl.test.uplate.save()
 14. Plot example #10
-![pythatree](https://github.com/uhwang/vgl-core/assets/43251090/f53fba84-bddb-44f3-a3b3-15da392e29a5)
+![pythatree](https://github.com/uhwang/vgl-core/assets/43251090/74c8ca1a-4734-404e-834c-9967a222c02d)
     ```Python
     import libvgl as vgl
     vgl.test.pythatree.save() 
