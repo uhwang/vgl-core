@@ -394,6 +394,14 @@ def hsv(H, S, V):
 	return Color(R,G,B)
     
     
+def hsv_table_by_saturation(H, S1, S2, V, order):
+    ctbl = []
+    
+    ds = (S2-S1)/order
+    for i in range(order):
+        S = S1 + ds*i
+        ctbl.append(hsv(H, S, V))
+    return ctbl
     
 def create_color_table(H1, H2, S, V, order):
 	cbtl = [(0,0,0)]*order
