@@ -23,3 +23,6 @@ from . import sierpinski
 from . import fractal_star
 from . import rotation
 from . import uplate
+from . import pythatree
+from . import pythatree45
+
