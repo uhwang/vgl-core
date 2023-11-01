@@ -6,10 +6,11 @@ fmm = vgl.FrameManager()
 frm = fmm.create(1,1,6,6, data)
 gbox= fmm.get_gbbox()
 lthk = 0.0001
+gray = vgl.color.GRAY40
 deg_lbox = vgl.util.rad_to_deg(math.acos(4*0.2)) # 4/5
 deg_rbox = vgl.util.rad_to_deg(math.acos(3*0.2)) # 3/5
 
-def pytha_tree(dev, v1, v2, angle, length, order):
+def pytha_tree(dev, v1, v2, angle, order):
     global ctbl
     
     l = math.sqrt((v2[0]-v1[0])**2 + (v2[1]-v1[1])**2)
@@ -18,14 +19,24 @@ def pytha_tree(dev, v1, v2, angle, length, order):
     ak= angle+deg_lbox
     am= angle-deg_rbox
     
-    box1 = vgl.basicshape.Box(v1[0], v1[1],k,k, lthk=lthk, fcol=ctbl[int(length-1)])
+    box1 = vgl.basicshape.Box(v1[0], v1[1],
+                              k,k,
+                              lcol=gray,
+                              lthk=lthk,
+                              fcol=ctbl[order])
     box1.rotate_about_point(v1[0],v1[1], ak)
-    box2 = vgl.basicshape.Box(v2[0], v2[1],m,m,pos_t=vgl.basicshape.BOX_POS_RIGHTBOTTOM, lthk=lthk, fcol=ctbl[int(length-1)])
+    
+    box2 = vgl.basicshape.Box(v2[0], v2[1],
+                              m,m,
+                              pos_t=vgl.basicshape.BOX_POS_RIGHTBOTTOM,
+                              lcol=gray,
+                              lthk=lthk,
+                              fcol=ctbl[order])
     box2.rotate_about_point(v2[0],v2[1], am)
-
+    
     box1.draw(dev)
     box2.draw(dev)
-
+    
     if order > 0:
         lp1 = box1.get_vertex(3)
         lp2 = box1.get_vertex(2)
@@ -33,23 +44,24 @@ def pytha_tree(dev, v1, v2, angle, length, order):
         rp1 = box2.get_vertex(3)
         rp2 = box2.get_vertex(2)
         
-        pytha_tree(dev, lp1, lp2, ak, length*0.8, order - 1)
-        pytha_tree(dev, rp1, rp2, am, length*0.8, order - 1)
+        pytha_tree(dev, lp1, lp2, ak, order - 1)
+        pytha_tree(dev, rp1, rp2, am, order - 1)
    
 def draw(dev):
-    global ctbl, length, dlength
+    global ctbl
     dev.set_device(frm)
-    order = 11
-    edge = 3
-    yshift = 4
-    length = 60
-    dlength = 1./(length-1)*0.5
-    ctbl = vgl.create_color_table(0,240, 0.8, 1, length)
+    order = 9
+    edge = 5
+    yshift = 0
+    ctbl = vgl.create_color_table(0,240, 0.8, 1, order)
     v1, v2 = (0,3+yshift), (3,3+yshift)
-    box = vgl.basicshape.Box(0,yshift, 3, 3, lthk=lthk, fcol=ctbl[int(length-1)])
+    box = vgl.basicshape.Box(0,yshift, edge, edge, 
+                             lcol=gray, 
+                             lthk=lthk, 
+                             fcol=ctbl[order-1])
     box.draw(dev)
-    pytha_tree(dev, box.get_vertex(3), box.get_vertex(2), 0, length*0.8, order)
-    vgl.draw_axis(dev)
+    pytha_tree(dev, box.get_vertex(3), box.get_vertex(2), 0, order-2)
+    #vgl.draw_axis(dev)
     dev.close()
 
 def save(ppt=False):
@@ -71,7 +83,8 @@ def save(ppt=False):
     draw(dev_pdf)
     draw(dev_svg)
     draw(dev_img)
-    if ppt: draw(dev_ppt)
+    if ppt: 
+        draw(dev_ppt)
     
 if __name__ == "__main__":
     save()
