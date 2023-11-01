@@ -43,7 +43,13 @@ CUSTOM3 = Color(0  ,255,127)
 CUSTOM4 = Color(127,  0,255)
 CUSTOM5 = Color(255,  0,127)
 GRAY20  = Color( 20, 20, 20)
+GRAY30  = Color( 30, 30, 30)
+GRAY40  = Color( 40, 40, 40)
 GRAY50  = Color( 50, 50, 50)
+GRAY60  = Color( 60, 60, 60)
+GRAY70  = Color( 70, 70, 70)
+GRAY80  = Color( 80, 80, 80)
+GRAY90  = Color( 90, 90, 90)
 GRAY100 = Color(100,100,100)
 
 # SVG Color Codes
