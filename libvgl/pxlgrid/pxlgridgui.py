@@ -43,7 +43,8 @@ from PyQt5.QtWidgets import ( QApplication,
 
 from libvgl import vgl, msg
 from math import fabs
-from .icons import icon_folder_open, icon_pxlgrid, icon_color_picker
+#from .icons import icon_folder_open, icon_pxlgrid, icon_color_picker
+from icons import icon_folder_open, icon_pxlgrid, icon_color_picker
 
 def print_pixelgrid(dev, m_left, m_top, f_wid, f_hgt, lcol, lthk, lpat, pxl_size):
  
@@ -96,7 +97,10 @@ class QPixelGrid(QWidget):
 
         paper.addWidget(QLabel("Paper"), 2, 0)
         self.paper_type = QComboBox()
-        self.paper_type.addItems(["LETTER", "A4"])
+        
+        
+        #self.paper_type.addItems(["LETTER", "A4"])
+        self.paper_type.addItems(vgl.paper.get_paper_names())
         paper.addWidget(self.paper_type, 2, 1)
         
         paper.addWidget(QLabel("Left")  , 3, 0)
@@ -127,9 +131,9 @@ class QPixelGrid(QWidget):
         paper.addWidget(self.pixel_size, 7,1)
         
         paper.addWidget(QLabel("LThk"), 8,0)
-        self.line_thickness = QDoubleSpinBox(minimum=0.001, value=0.003, suffix=' %')
-        self.line_thickness.setSingleStep(0.001)
-        self.line_thickness.setDecimals(3)
+        self.line_thickness = QDoubleSpinBox(minimum=0.0001, value=0.0003, suffix=' %')
+        self.line_thickness.setSingleStep(0.0001)
+        self.line_thickness.setDecimals(4)
         paper.addWidget(self.line_thickness, 8,1)
         
         paper.addWidget(QLabel("LCol"), 9,0)
@@ -305,7 +309,7 @@ class QPixelGrid(QWidget):
                     print_pixelgrid(dev, m_left, m_top, f_wid, f_hgt, lcol, lthk, lpat, pxl_size)
                 if key == vgl.devutil._dev_pdf and value:
                     out_file = str(Path.joinpath(cwd, "%s.pdf"%fn))
-                    dev = vgl.DevicePDF(out_file, gbbox)  
+                    dev = vgl.DevicePDF(out_file, gbbox, (p_size[0], p_size[1]))  
                     dev.set_device(frm)
                     print_pixelgrid(dev, m_left, m_top, f_wid, f_hgt, lcol, lthk, lpat, pxl_size)
                 if key == vgl.devutil._dev_svg and value:
@@ -319,7 +323,7 @@ class QPixelGrid(QWidget):
                     dev.set_device(frm)
                     print_pixelgrid(dev, m_left, m_top, f_wid, f_hgt, lcol, lthk, lpat, pxl_size)
         except Exception as e:
-            msg.message_box(e, msg.message_error)
+            msg.message_box(str(e), msg.message_error)
             
 def pixel_grid():
     
