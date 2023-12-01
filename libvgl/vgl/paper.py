@@ -44,7 +44,9 @@ _paper_info = {
 "LETTER": ( 8.5   , 11.0    ,  215.8915,  279.389)
 }
 
-
+def get_paper_names():
+    return _paper_info.keys()
+    
 def get_paper_size(pn):
     return _paper_info[pn] if pn in _paper_info else None
     
