@@ -85,7 +85,7 @@ vgl package for distribution
     import libvgl as vgl
     vgl.test.pythatree45.save()
 16.  Plot example #12
-![star](https://github.com/uhwang/vgl-core/assets/43251090/fe877606-c22c-4cca-85a8-abd4a0bb7610)
+![star](https://github.com/uhwang/vgl-core/assets/43251090/8e0239c1-7c1d-4378-9f1c-b110213413e1)
      ```Python
      import libvgl as vgl
      vgl.test.starpolygon.save()
