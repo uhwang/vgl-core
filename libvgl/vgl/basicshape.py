@@ -436,7 +436,6 @@ class StarPolygon(shape.Shape):
         self.viewport = viewport
         self.out_nvert = nvert
         self.radius = radius
-        # parameter u_grow
         self._u_vertex = np.zeros(nvert*2)
         self.reset_pvertex()
         self.reset_uvertex()
@@ -492,6 +491,6 @@ class StarPolygon(shape.Shape):
     @u_param.setter
     def u_param(self, u):
         for i in range(self.out_nvert):
-            self.vertex[2+i*4] = self._u_vertex[i*2]*u
-            self.vertex[2+i*4+1] = self._u_vertex[i*2+1]*u
+            self.vertex[2+i*4] = self.sx+(self._u_vertex[i*2]-self.sx)*u
+            self.vertex[2+i*4+1] = self.sy+(self._u_vertex[i*2+1]-self.sy)*u
         
