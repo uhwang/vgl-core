@@ -420,8 +420,9 @@ class StarPolygon(shape.Shape):
     def __init__(self, 
                  sx, 
                  sy, 
-                 clength  = 1, # length from center to a vertex
-                 cline    = False, # show the line from center to a vertex
+                 nvert=5,
+                 radius  = 1, # length from center to a vertex
+                 show_radius = False, # show the line from center to a vertex
                  lcol     = color.BLACK,
                  lthk     = 0.001,
                  fcol     = None, 
@@ -429,11 +430,72 @@ class StarPolygon(shape.Shape):
                  pat_len  = 0.04,  
                  viewport = False):  
                  
-        super().__init__(sx, sy, 5, clength, 
+        super().__init__(sx, sy, nvert*2, radius, 
                          lcol=lcol, lthk=lthk, fcol=fcol, lpat=lpat, pat_len=pat_len)
-        self.cline = cline
+        self.show_radius = show_radius
         self.viewport = viewport
+        self.out_nvert = nvert
+        self.radius = radius
+        # parameter u_grow
+        self._u_vertex = np.zeros(nvert*2)
+        self.reset_pvertex()
+        self.reset_uvertex()
         
-        # calculate vertex pos
+    def update(self, sx, sy):
+        self.sx = sx
+        self.sy = sy
+        self.reset_pvertex()
+        self.reset_uvertex()
+      
+    def reset_pvertex(self): 
+        for k in range(self.out_nvert):
+                angle = 0.5*(4*k+self.out_nvert)*np.pi/self.out_nvert
+                self.vertex[k*4] = self.sx+self.radius*np.cos(angle) 
+                self.vertex[k*4+1] = self.sy+self.radius*np.sin(angle)
+
+    def reset_uvertex(self):
+        nvert = self.out_nvert
+        xx = self.vertex[0::4]
+        yy = self.vertex[1::4]
+
+        for i in range(nvert):
+            i1 = i
+            i2 = (i+2)%nvert
+            i3 = (i+1)%nvert
+            i4 = (nvert-1+i)%nvert
         
+            x1 = xx[i1]
+            y1 = yy[i1]
+            x2 = xx[i2]
+            y2 = yy[i2]
+            x3 = xx[i3]
+            y3 = yy[i3]
+            x4 = xx[i4]
+            y4 = yy[i4]
+        
+            m1 = (y2-y1)/(x2-x1)
+            m2 = (y4-y3)/(x4-x3)
+            px = (m1*x1-y1-m2*x3+y3)/(m1-m2)
+            py = m1*(px-x1)+y1
+        
+            self.vertex[2+i*4] = px
+            self.vertex[2+i*4+1] = py
+            self._u_vertex[i*2] = px
+            self._u_vertex[i*2+1] = py
+            
+    @property
+    def u_radius(self):
+        return np.sqrt(self.vertex[2]**2+self.vertex[3]**2)
+        
+    @property
+    def u_param(self):
+        return self._param_u
+        
+    # u -> 1 : inner radius
+    # u < 1, u =1, u > 1
+    @u_param.setter
+    def u_param(self, u):
+        for i in range(self.out_nvert):
+            self.vertex[2+i*4] = self._u_vertex[i*2]*u
+            self.vertex[2+i*4+1] = self._u_vertex[i*2+1]*u
         
