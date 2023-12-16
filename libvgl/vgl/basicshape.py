@@ -464,14 +464,10 @@ class StarPolygon(shape.Shape):
             i3 = (i+1)%nvert
             i4 = (nvert-1+i)%nvert
         
-            x1 = xx[i1]
-            y1 = yy[i1]
-            x2 = xx[i2]
-            y2 = yy[i2]
-            x3 = xx[i3]
-            y3 = yy[i3]
-            x4 = xx[i4]
-            y4 = yy[i4]
+            x1, y1 = xx[i1], yy[i1]
+            x2, y2 = xx[i2], yy[i2]
+            x3, y3 = xx[i3], yy[i3]
+            x4, y4 = xx[i4], yy[i4]
         
             m1 = (y2-y1)/(x2-x1)
             m2 = (y4-y3)/(x4-x3)
