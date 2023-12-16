@@ -6,7 +6,6 @@ fmm = vgl.FrameManager()
 frm = fmm.create(0,0,4,4, vgl.Data(-r,r,-r,r))
 dev = vgl.DeviceIMG("./starpolygon/star.jpg", fmm.get_gbbox(), 300)
 dev.set_device(frm)
-gbox = fmm.get_gbbox()
 star = vgl.basicshape.StarPolygon(0,0,5)
 uu, max_u = 1, r/star.u_radius
 fps, duration= 10, 20
