@@ -446,11 +446,15 @@ class StarPolygon(shape.Shape):
         self.reset_pvertex()
         self.reset_uvertex()
       
+    def reset(self):
+        self.reset_pvertex()
+        self.reset_uvertex()
+        
     def reset_pvertex(self): 
         for k in range(self.out_nvert):
-                angle = 0.5*(4*k+self.out_nvert)*np.pi/self.out_nvert
-                self.vertex[k*4] = self.sx+self.radius*np.cos(angle) 
-                self.vertex[k*4+1] = self.sy+self.radius*np.sin(angle)
+            angle = 0.5*(4*k+self.out_nvert)*np.pi/self.out_nvert
+            self.vertex[k*4] = self.sx+self.radius*np.cos(angle) 
+            self.vertex[k*4+1] = self.sy+self.radius*np.sin(angle)
 
     def reset_uvertex(self):
         nvert = self.out_nvert
@@ -468,16 +472,45 @@ class StarPolygon(shape.Shape):
             x3, y3 = xx[i3], yy[i3]
             x4, y4 = xx[i4], yy[i4]
         
-            m1 = (y2-y1)/(x2-x1)
-            m2 = (y4-y3)/(x4-x3)
-            px = (m1*x1-y1-m2*x3+y3)/(m1-m2)
-            py = m1*(px-x1)+y1
-        
+            if abs(x2-x1) < 1e-10:
+                m = (y4-y3)/(x4-x3)
+                b = y3-m*x3
+                px= x1
+                py= m*x1+b
+
+            elif abs(x4-x3) < 1e-10:
+                m = (y2-y1)/(x2-x1)
+                b = y1-m*x1
+                px= x3
+                py= m*x3+b
+
+            else:
+                m1 = (y2-y1)/(x2-x1)
+                m2 = (y4-y3)/(x4-x3)
+                px = (m1*x1-y1-m2*x3+y3)/(m1-m2)
+                py = m1*(px-x1)+y1
+            
             self.vertex[2+i*4] = px
             self.vertex[2+i*4+1] = py
             self._u_vertex[i*2] = px
             self._u_vertex[i*2+1] = py
-            
+    
+    @property
+    def px_vertex(self):
+        return self.vertex[0::4]
+        
+    @property
+    def py_vertex(self):
+        return self.vertex[1::4]
+        
+    @property
+    def ux_vertex(self):
+        return self.vertex[2::4]
+
+    @property
+    def uy_vertex(self):
+        return self.vertex[3::4]
+        
     @property
     def u_radius(self):
         return np.sqrt(self.vertex[2]**2+self.vertex[3]**2)
