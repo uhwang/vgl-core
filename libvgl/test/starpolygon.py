@@ -54,8 +54,8 @@ def draw_star():
     plot(dev_ppt)
     
 def save():
-    #from . import chkfld
-    import chkfld
+    from . import chkfld
+    #import chkfld
     global dev
     
     if not chkfld.create_folder("./starpolygon"):
