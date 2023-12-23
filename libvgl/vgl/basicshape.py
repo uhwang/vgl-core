@@ -461,10 +461,11 @@ class StarPolygon(shape.Shape):
         xx = self.vertex[0::4]
         yy = self.vertex[1::4]
 
-        if nvert == 4:
-            default_u = 0.4
+        if nvert == 3 or nvert == 4:
+            default_u = nvert*0.1
             for i in range(nvert):
-                angle = np.pi*(0.75+0.5*i)
+                #angle = np.pi*(0.75+0.5*i)
+                angle = 2*np.pi*(i+1)/nvert+0.5*(nvert-2)*np.pi/nvert
                 px = self.sx + default_u*self.radius*np.cos(angle)
                 py = self.sy + default_u*self.radius*np.sin(angle)
                 self.vertex[2+i*4] = px
