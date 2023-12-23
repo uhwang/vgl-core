@@ -461,39 +461,50 @@ class StarPolygon(shape.Shape):
         xx = self.vertex[0::4]
         yy = self.vertex[1::4]
 
-        for i in range(nvert):
-            i1 = i
-            i2 = (i+2)%nvert
-            i3 = (i+1)%nvert
-            i4 = (nvert-1+i)%nvert
-        
-            x1, y1 = xx[i1], yy[i1]
-            x2, y2 = xx[i2], yy[i2]
-            x3, y3 = xx[i3], yy[i3]
-            x4, y4 = xx[i4], yy[i4]
-        
-            if abs(x2-x1) < 1e-10:
-                m = (y4-y3)/(x4-x3)
-                b = y3-m*x3
-                px= x1
-                py= m*x1+b
-
-            elif abs(x4-x3) < 1e-10:
-                m = (y2-y1)/(x2-x1)
-                b = y1-m*x1
-                px= x3
-                py= m*x3+b
-
-            else:
-                m1 = (y2-y1)/(x2-x1)
-                m2 = (y4-y3)/(x4-x3)
-                px = (m1*x1-y1-m2*x3+y3)/(m1-m2)
-                py = m1*(px-x1)+y1
+        if nvert == 4:
+            default_u = 0.4
+            for i in range(nvert):
+                angle = np.pi*(0.75+0.5*i)
+                px = self.sx + default_u*self.radius*np.cos(angle)
+                py = self.sy + default_u*self.radius*np.sin(angle)
+                self.vertex[2+i*4] = px
+                self.vertex[2+i*4+1] = py
+                self._u_vertex[i*2] = px
+                self._u_vertex[i*2+1] = py
+        else:
+            for i in range(nvert):
+                i1 = i
+                i2 = (i+2)%nvert
+                i3 = (i+1)%nvert
+                i4 = (nvert-1+i)%nvert
             
-            self.vertex[2+i*4] = px
-            self.vertex[2+i*4+1] = py
-            self._u_vertex[i*2] = px
-            self._u_vertex[i*2+1] = py
+                x1, y1 = xx[i1], yy[i1]
+                x2, y2 = xx[i2], yy[i2]
+                x3, y3 = xx[i3], yy[i3]
+                x4, y4 = xx[i4], yy[i4]
+            
+                if abs(x2-x1) < 1e-10:
+                    m = (y4-y3)/(x4-x3)
+                    b = y3-m*x3
+                    px= x1
+                    py= m*x1+b
+    
+                elif abs(x4-x3) < 1e-10:
+                    m = (y2-y1)/(x2-x1)
+                    b = y1-m*x1
+                    px= x3
+                    py= m*x3+b
+    
+                else:
+                    m1 = (y2-y1)/(x2-x1)
+                    m2 = (y4-y3)/(x4-x3)
+                    px = (m1*x1-y1-m2*x3+y3)/(m1-m2)
+                    py = m1*(px-x1)+y1
+                
+                self.vertex[2+i*4] = px
+                self.vertex[2+i*4+1] = py
+                self._u_vertex[i*2] = px
+                self._u_vertex[i*2+1] = py
     
     @property
     def px_vertex(self):
