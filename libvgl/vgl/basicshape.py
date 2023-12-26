@@ -422,17 +422,18 @@ class StarPolygon(shape.Shape):
                  sy, 
                  nvert=5,
                  radius  = 1, # length from center to a vertex
-                 show_radius = False, # show the line from center to a vertex
                  lcol     = color.BLACK,
                  lthk     = 0.001,
                  fcol     = None, 
                  lpat     = linepat._PAT_SOLID,
                  pat_len  = 0.04,  
                  viewport = False):  
-                 
+         
+        if nvert < 3:
+            raise ValueError('nvert must be greater than equal 3')
+            
         super().__init__(sx, sy, nvert*2, radius, 
                          lcol=lcol, lthk=lthk, fcol=fcol, lpat=lpat, pat_len=pat_len)
-        self.show_radius = show_radius
         self.viewport = viewport
         self.out_nvert = nvert
         self.radius = radius
@@ -464,6 +465,7 @@ class StarPolygon(shape.Shape):
         if nvert == 3 or nvert == 4:
             default_u = nvert*0.1
             for i in range(nvert):
+                #angle = np.pi*(0.75+0.5*i)
                 angle = 2*np.pi*(i+1)/nvert+0.5*(nvert-2)*np.pi/nvert
                 px = self.sx + default_u*self.radius*np.cos(angle)
                 py = self.sy + default_u*self.radius*np.sin(angle)
@@ -485,15 +487,13 @@ class StarPolygon(shape.Shape):
             
                 if abs(x2-x1) < 1e-10:
                     m = (y4-y3)/(x4-x3)
-                    b = y3-m*x3
                     px= x1
-                    py= m*x1+b
+                    py= m*(px-x3)+y3
     
                 elif abs(x4-x3) < 1e-10:
                     m = (y2-y1)/(x2-x1)
-                    b = y1-m*x1
                     px= x3
-                    py= m*x3+b
+                    py= m*(px-x1)+y1
     
                 else:
                     m1 = (y2-y1)/(x2-x1)
@@ -507,19 +507,19 @@ class StarPolygon(shape.Shape):
                 self._u_vertex[i*2+1] = py
     
     @property
-    def px_vertex(self):
+    def pxs(self):
         return self.vertex[0::4]
         
     @property
-    def py_vertex(self):
+    def pys(self):
         return self.vertex[1::4]
         
     @property
-    def ux_vertex(self):
+    def uxs(self):
         return self.vertex[2::4]
 
     @property
-    def uy_vertex(self):
+    def uys(self):
         return self.vertex[3::4]
         
     @property
