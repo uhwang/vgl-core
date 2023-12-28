@@ -452,7 +452,7 @@ class StarPolygon(shape.Shape):
         self.reset_uvertex()
         
     def reset_pvertex(self): 
-        for k in range(self.out_nvert):
+        for k in range(self.nvert):
             angle = 0.5*(4*k+self.nvert)*np.pi/self.nvert
             self.vertex[k*4] = self.sx+self.radius*np.cos(angle) 
             self.vertex[k*4+1] = self.sy+self.radius*np.sin(angle)
