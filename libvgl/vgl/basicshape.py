@@ -435,7 +435,7 @@ class StarPolygon(shape.Shape):
         super().__init__(sx, sy, nvert*2, radius, 
                          lcol=lcol, lthk=lthk, fcol=fcol, lpat=lpat, pat_len=pat_len)
         self.viewport = viewport
-        self.out_nvert = nvert
+        self.nvert = nvert
         self.radius = radius
         self._u_vertex = np.zeros(nvert*2)
         self.reset_pvertex()
@@ -453,12 +453,12 @@ class StarPolygon(shape.Shape):
         
     def reset_pvertex(self): 
         for k in range(self.out_nvert):
-            angle = 0.5*(4*k+self.out_nvert)*np.pi/self.out_nvert
+            angle = 0.5*(4*k+self.nvert)*np.pi/self.nvert
             self.vertex[k*4] = self.sx+self.radius*np.cos(angle) 
             self.vertex[k*4+1] = self.sy+self.radius*np.sin(angle)
 
     def reset_uvertex(self):
-        nvert = self.out_nvert
+        nvert = self.nvert
         xx = self.vertex[0::4]
         yy = self.vertex[1::4]
 
@@ -534,7 +534,7 @@ class StarPolygon(shape.Shape):
     # u < 1, u =1, u > 1
     @u_param.setter
     def u_param(self, u):
-        for i in range(self.out_nvert):
+        for i in range(self.nvert):
             self.vertex[2+i*4] = self.sx+(self._u_vertex[i*2]-self.sx)*u
             self.vertex[2+i*4+1] = self.sy+(self._u_vertex[i*2+1]-self.sy)*u
         
