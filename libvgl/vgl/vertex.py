@@ -23,6 +23,11 @@ class Vertex():
            isinstance(src, tuple):
             self.point = src
             
+    # x, y : nd array
+    def set_xy(self, x, y):
+        self.vertex[0::2] = x
+        self.vertex[1::2] = y
+        
     def get_vertices(self): 
         return self.vertex
     
@@ -32,6 +37,14 @@ class Vertex():
     def get_nvertex(self): 
         return int(self.vertex.size/2)
     
+    @property
+    def xss(self):
+        return self.vertex[::2]
+
+    @property
+    def yss(self):
+        return self.vertex[1::2]
+        
     def get_xs(self): 
         return self.vertex[::2]
     
