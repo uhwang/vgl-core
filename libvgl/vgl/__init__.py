@@ -29,6 +29,8 @@ from . devcairo   import *
 from . devpdf     import *
 from . devppt     import *
 from . devsvg     import *
+from . devps      import *
+from . drvps      import *
 from . drvemf     import *
 from . drvpdf     import *
 from . emfconst   import *
