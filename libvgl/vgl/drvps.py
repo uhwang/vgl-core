@@ -22,7 +22,7 @@ _PS_HEADER = [
 
 _EPS_HEADER = "%%BoundingBox: %d %d %d %d\n"
 _PS_SCALE_INCH = "72 72 scale\n"
-_PS_SET_COORD_UPLEFT = "0 %3.4f translate\n1 -1 scale\n"
+_PS_SET_COORD_UPLEFT = "0 %3.5f translate\n1 -1 scale\n"
 _END = "%%EOF"
 
 _ps_points_inch = 72
@@ -65,18 +65,18 @@ class PSDrive():
         for s in self.pen.stream:
             self.fp.write(s)
         self.fp.write("closepath\n")
-        self.fp.write("%1.4f %1.4f %1.4f setrgbcolor\n"
-                      "%1.4f setlinewidth\n"
+        self.fp.write("%1.5f %1.5f %1.5f setrgbcolor\n"
+                      "%1.5f setlinewidth\n"
                       "stroke\n"%(lc.r, lc.g, lc.b, self.pen.lthk))
         self.pen = None
     
     def MoveTo(self, dev, x, y):
-        self.pen.stream = "%3.4f %3.4f m\n"%\
+        self.pen.stream = "%3.5f %3.5f m\n"%\
                        (x if viewport else dev._x_viewport(x), 
                         y if viewport else dev._y_viewport(y))
     
     def LineTo(self, dev, x, y):
-        self.pen.stream = "%3.4f %3.4f l\n"%\
+        self.pen.stream = "%3.5f %3.5f l\n"%\
                        (x if viewport else dev._x_viewport(x), 
                         y if viewport else dev._y_viewport(y))
     
@@ -87,12 +87,12 @@ class PSDrive():
         
         pat_inst = isinstance(lpat, linepat.LinePattern)
         
-        self.fp.write("newpath\n%3.4f %3.4f moveto\n"%\
+        self.fp.write("newpath\n%3.5f %3.5f moveto\n"%\
                        (x[0] if viewport else dev._x_viewport(x[0]),
                         y[0] if viewport else dev._y_viewport(y[0])))
                         
         for x1, y1 in zip(x[1:], y[1:]):
-            self.fp.write("%3.4f %3.4f lineto\n"%\
+            self.fp.write("%3.5f %3.5f lineto\n"%\
                        (x1 if viewport else dev._x_viewport(x1), 
                         y1 if viewport else dev._y_viewport(y1)))
         
@@ -104,7 +104,7 @@ class PSDrive():
 
         if fcol:
             fc = color.normalize(fcol)
-            self.fp.write("%1.4f %1.4f %1.4f setrgbcolor\nfill\n"%(fc.r, fc.g, fc.b))
+            self.fp.write("%1.5f %1.5f %1.5f setrgbcolor\nfill\n"%(fc.r, fc.g, fc.b))
 
         if lcol:
             lc = color.normalize(lcol)
@@ -125,8 +125,8 @@ class PSDrive():
                             welf.write("%d "% p*pat_mul)
                         self.fp.write("] 0 setdash\n")
                     
-            self.fp.write("%1.4f %1.4f %1.4f setrgbcolor\n"
-                          "%1.4f setlinewidth\n"
+            self.fp.write("%1.5f %1.5f %1.5f setrgbcolor\n"
+                          "%1.5f setlinewidth\n"
                           "stroke\n"%(lc.r, lc.g, lc.b, lthk))
 
     def Polygon(self, x, y, lcol, lthk, lpat, fcol):
