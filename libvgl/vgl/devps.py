@@ -1,69 +1,109 @@
 
 '''
-    devps.py
-    
-    # setlinejoin   : 0, 1, 2
-    # setlinewidth
-    newpath
-    #1 #2 moveto
-    #1 #2 lineto
-    
-    closepath : don need that start pnt
-    stroke
-    
-    #1 #2 #3 setrgbcolor : 0-1, 0-1, 0-1 
-    
-    
-    newpath
-    moveto
-    lineto
-    rmoveto
-    rlineto
-    closepath
-    stroke
-    fill
-    
-    [] 0 setdash
-    
-    setlinewidth
-    setrgbcolor
-    setgray
-    setlinejoin
-    setlinecap
-    
-    
-    Ex 1. fill a square with one color and stroke with another
-        newpath
-        144 144 moveto
-        144 0 rlineto
-        0 144 rlineto
-        -144 0 rlineto
-        closepath
-        gsave
-        1 0 0 setrgbcolor
-        fill
-        grestore
-        0 setgray
-        stroke
-    
+    devps.py 
 '''
 
 from . import device
 from . import color
 from . import linepat
 from . import patline
-
-_PS_HEADER = ""
-_EPS_HEADER = "%%!PS-Adobe-3.0 EPSF-3.0\n%%%%BoundingBox: %d %d %d %d"
-_
-_PS_LINE = "/L0 { newpath moveto lineto "
-_PS_LINE_DASH = "L1 { newpath "
-_PS_POLYGON = ""
+from . import drvps
+from . import paper 
+from . import devval
 
 class DevicePS(device.DeviceVector):
-    def __init__(self):
-        pass
-    
+    def __init__(
+        self,
+        fname,
+        gbox, 
+        size=(8.5,11.0), 
+        dev_type = devval.DEV_PS, 
+        layout_dir=paper.paper_dir_portrait):
         
+        self.dev = drvps.PSDrive(fname, gbox, size[0], size[1],
+                                 dev_type, layout_dir)
+        self.pen = False
+
+    def close(self):
+        self.dev.Close()
+        
+    def set_device(self, frm, extend=device._FIT_NONE):
+        self.frm = frm
+        self.set_plot(frm,extend)        
     
+    def make_pen(self, lcol, lthk, lpat = linepat._PAT_SOLID):
+        self.dev.MakePen(lcol, lthk, lpat)
+        self.pen = True
     
+    def delete_pen(self):
+        self.dev.DeletePen()
+        self.pen = False
+        
+    def _line(self, sx, sy, ex, ey, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, viewport=False):
+        _lthk = lthk
+        if not self.pen:
+            _lthk = lthk*self.frm.hgt()
+        self.dev.Line(self, sx, sy, ex, ey, lcol, _lthk, lpat, viewport)
+        
+    def _moveto(self, x, y, viewport=False):
+        self.dev.MoveTo(self, x, y, viewport)
+
+    def _lineto(self, x, y, viewport=False):
+        self.dev.LineTo(self, x, y, viewport)
+        
+    def moveto(self, x, y):
+        self._moveto(x,y,False)
+        
+    def lmoveto(self, x, y):
+        self._moveto(x,y,True)
+        
+    def lineto(self, x, y):
+        self._lineto(x,y,False)
+
+    def llineto(self, x, y):
+        self._lineto(x,y,True)
+        
+    def lline(self, x1, y1, x2, y2, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID):
+        self._line(x1, y1, x2, y2, lcol, lthk, lpat, True)
+        
+    def line(self, x1, y1, x2, y2, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID):
+        self._line(x1, y1, x2, y2, lcol, lthk, lpat, False)
+        
+    def polyline(self, x, y, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, closed=False):
+        _lthk = lthk
+        if not self.pen:
+            _lthk = lthk*self.frm.hgt()
+        self.dev.Polyline(self, x, y, lcol, _lthk, lpat, None, closed, False)
+        
+    def lpolyline(self, x, y, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, closed=False):
+        _lthk = lthk
+        if not self.pen:
+            _lthk = lthk*self.frm.hgt()
+        self.dev.Polyline(self, x, y, lcol, _lthk, lpat, None, closed, True)
+        
+    def polygon(self, x, y, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=None):
+        _lthk = lthk
+        if not self.pen:
+            _lthk = lthk*self.frm.hgt()
+        self.dev.Polyline(self, x, y, lcol, _lthk, lpat, fcol, True, False)
+    
+    def lpolygon(self, x, y, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=None):
+        _lthk = lthk
+        if not self.pen:
+            _lthk = lthk*self.frm.hgt()
+        self.dev.Polyline(self, x, y, lcol, _lthk, lpat, fcol, True, True)
+        
+    def symbol(self, x,y,sym,draw=False):
+        cx = self._x_viewport(x)
+        cy = self._y_viewport(y)
+        px, py = sym.update_xy(cx,cy)
+        self.dev.Polyline(self, px, py, sym.lcol, sym.lthk, linepat._PAT_SOLID, 
+        sym.fcol if sym.fill else None, True, True)
+    
+    def circle(self, x,y, rad, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=None):
+        if not self.pen:
+            _lthk = lthk*self.frm.hgt()
+        rrad = np.linspace(0, np.pi*2, self._circle_point)
+        x1 = x+rad*np.cos(rrad)
+        y1 = y+rad*np.sin(rrad)
+        self.dev.Polyline(self, x1, y1, lcol, _lthk, lpat, fcol, True, False)
