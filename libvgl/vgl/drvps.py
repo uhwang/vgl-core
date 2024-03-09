@@ -4,6 +4,7 @@
     
     3/8/24
     
+    Letter : 8.5x11
     1 inch = 72 points.
 
 '''
@@ -20,9 +21,11 @@ _PS_HEADER = [
     "%%EndProlog\n",
 ]
 
-_EPS_HEADER = "%%BoundingBox: %d %d %d %d\n"
+_EPS_HEADER = "%%%%BoundingBox: %d %d %d %d\n"
 _PS_SCALE_INCH = "72 72 scale\n"
-_PS_SET_COORD_UPLEFT = "0 %3.5f translate\n1 -1 scale\n"
+_PS_SET_COORD_UPLEFT = "0 %3.5f translate\n"
+_PS_SET_YDIR_DOWN = "1 -1 scale\n"
+_PS_LANDSCAPE = "90 rotate\n"
 _END = "%%EOF"
 
 _ps_points_inch = 72
@@ -45,15 +48,22 @@ class PSDrive():
             
         self.fp.write(_PS_HEADER[0])
         if dev_type == devval.DEV_EPS:
-            self.fp.write(_EPS_HEADER%(gbbox.sx,
-                                       gbbox.sy,
-                                       gbbox.wid(),
-                                       gbbox.hgt()))        
+            self.fp.write(_EPS_HEADER%\
+                         (gbbox.sx, 
+                          gbbox.sy,
+                          gbbox.wid(), 
+                          gbbox.hgt()))        
             
         self.fp.write(_PS_HEADER[1])
         self.fp.write(_PS_HEADER[2])
         self.fp.write(_PS_SCALE_INCH)
-        self.fp.write(_PS_SET_COORD_UPLEFT%hgt)
+        
+        if layout_dir == paper.paper_dir_portrait:
+            self.fp.write(_PS_SET_COORD_UPLEFT%hgt)
+        elif layout_dir == paper.paper_dir_landscape:
+            self.fp.write(_PS_LANDSCAPE)
+            
+        self.fp.write(_PS_SET_YDIR_DOWN)
         self.closed = False
         
     def MakePen(self, lcol, lthk, lpat):
