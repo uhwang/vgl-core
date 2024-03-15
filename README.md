@@ -12,8 +12,9 @@ vgl package for distribution
 
 3. Libvgl Architecture
 <img width="520" alt="Slide3" src="https://github.com/uhwang/vgl-core/assets/43251090/82d22fa7-9110-4813-ac37-808023473b6c">
-![Slide4](https://github.com/uhwang/vgl-core/assets/43251090/7151ee44-5518-4a90-b32b-51ca2d3ef577)
-4. Usage
+![Slide4](https://github.com/uhwang/vgl-core/assets/43251090/87fd7b27-50e4-493d-948b-238aec48d39c)
+
+5. Usage
    ```Python
    import libvgl as vgl
    vgl.pixel_grid()
