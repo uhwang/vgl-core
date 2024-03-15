@@ -12,7 +12,7 @@ vgl package for distribution
 
 3. Libvgl Architecture
 <img width="520" alt="Slide3" src="https://github.com/uhwang/vgl-core/assets/43251090/82d22fa7-9110-4813-ac37-808023473b6c">
-![Slide4](https://github.com/uhwang/vgl-core/assets/43251090/87fd7b27-50e4-493d-948b-238aec48d39c)
+<img width="608" alt="Slide4" src="https://github.com/uhwang/vgl-core/assets/43251090/809e0ac5-bbbc-4cfc-8eec-7292a15c8e0c">
 
 5. Usage
    ```Python
