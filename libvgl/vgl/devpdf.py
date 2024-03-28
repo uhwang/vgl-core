@@ -12,15 +12,26 @@ from . import device
 from . import drvpdf
 from . import linepat
 from . import patline
-from . import paper
+from . import devval
 
 class DevicePDF(device.DeviceVector):
-    def __init__(self, fname, gbox, p=(8.5,11.0), compression=False):
+    def __init__(
+            self, 
+            fname, 
+            gbox, 
+            size=(8.5,11.0), 
+            layout_dir = devval.layout_dir_portrait,
+            compression=False):
         super().__init__()
         self.gbox =gbox
-        self.wid = p[0]        
-        self.hgt = p[1]        
-        self.dev = drvpdf.PDFDriver(fname, gbox, p[0], p[1], compression)
+        self.wid = size[0]        
+        self.hgt = size[1]        
+        self.dev = drvpdf.PDFDriver(fname, 
+                                    gbox, 
+                                    size[0], 
+                                    size[1], 
+                                    layout_dir, 
+                                    compression)
         self.pen = False
         self.brush = device.Brush()
 
