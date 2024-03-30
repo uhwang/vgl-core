@@ -111,6 +111,9 @@ class Frame():
         self.axis_t = axis.AXIS_CARTESIAN
         self.axis_polar = None
         self.axis_cartesian = None
+        self.fit_axis = fit_axis
+        
+        self.create_default_axis()
         # xy mode
         #self.xaxis1 = 
         #self.yaxis1 = 
@@ -123,19 +126,22 @@ class Frame():
         #self.xaxis3 = 
         #self.yaxis3 = 
         #self.zaxis3 = 
-        
-        #if data is not None:
-        if isinstance(data, Data):
-            if fit_axis is True:
-                self.fit_axis()
-            else:
-                self.create_axis(data.xmin, data.xmax, data.ymin, data.ymax)
-            
+
         self.update_pdom()                    # compute plot domain vertex
         self.update_vertex()                  # compute frame vertex
    
     #def resize(self, wid, hgt):
         
+    def create_default_axis(self):
+        if isinstance(self.data, Data):
+            if self.fit_axis == True:
+                self.fit_axis()
+            else:
+                self.create_axis(self.data.xmin, 
+                                 self.data.xmax, 
+                                 self.data.ymin, 
+                                 self.data.ymax)
+                    
     def set_axispos_center(self):
         #self.axis_cartesian
         self.xaxis.set_pos_center()
@@ -199,10 +205,10 @@ class Frame():
     def get_clip    (self):  # clip region is equal to plot domain
         return self.pvtx.get_vertex(0)+self.pvtx.get_vertex(2)
         
-    def get_frm_xs  (self): return self.fvtx.get_xs() # frame vertex x-coordinates
-    def get_frm_ys  (self): return self.fvtx.get_ys() # frame vertex y-coordinates
-    def get_pdom_xs (self): return self.pvtx.get_xs() # plot domain vertex x-coordinates
-    def get_pdom_ys (self): return self.pvtx.get_ys() # plot domain vertex y-coordinates
+    def get_frm_xs  (self): return self.fvtx.xss # frame vertex x-coordinates
+    def get_frm_ys  (self): return self.fvtx.yss # frame vertex y-coordinates
+    def get_pdom_xs (self): return self.pvtx.xss # plot domain vertex x-coordinates
+    def get_pdom_ys (self): return self.pvtx.yss # plot domain vertex y-coordinates
     def hgt         (self): return self.bbox.hgt()    # return frame height
     def wid         (self): return self.bbox.wid()    # return frame width
     def get_property(self): return self.fprt
@@ -480,7 +486,7 @@ class FrameManager():
         self.f_list = dict()
         self.id = FrameId()
         
-    def create(self, sx, sy, wid, hgt, data):
+    def create(self, sx, sy, wid, hgt, data=None):
         id = self.id.get()
         frm = Frame(id, sx, sy, wid, hgt, data)
         self.f_list[str(id)] = frm

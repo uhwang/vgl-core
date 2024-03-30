@@ -9,7 +9,7 @@
 #
 
 class Data():
-    def __init__(self, xmin, xmax, ymin, ymax, zmin=0, zmax=0):
+    def __init__(self, xmin=0, xmax=1, ymin=0, ymax=1, zmin=0, zmax=0):
         self.xmin=xmin
         self.xmax=xmax 
         self.ymin=ymin 
@@ -24,8 +24,21 @@ class Data():
         self.zmin_org=zmin 
         self.zmax_org=zmax
 	
-    def load(self, fn):
-        return
+        self.data_ptr = {}
+        self.data_idx = 0
+        
+    def load(self, x,y):
+        self.data_idx += 1
+        self.data_ptr[self.data_idx] = (x,y)
+        xmin = min(x)
+        xmax = max(x)
+        ymin = min(y)
+        ymax = max(y)
+        
+        if xmin < self.xmin: self.xmin = xmin
+        if xmax > self.xmax: self.xmax = xmax
+        if ymin < self.ymin: self.ymin = ymin
+        if ymax > self.ymax: self.ymax = ymax
         
     def reset(self):
         self.xmin=self.xmin_org

@@ -12,10 +12,25 @@ import numpy as np
 from operator import itemgetter
 import math
 
+from . import Data
 from . import color, mesh3d, text
-#import color, mesh3d, text
+from . import drawaxis
 
+def plot(dev, frm, x, y):
+    if isinstance(frm.data, Data):
+        frm.data.load(x,y)
+    else:
+        frm.data = Data()
+        frm.data.load(x,y)
+        frm.create_default_axis()
+        
+    dev.set_device(frm)
 
+    for d in frm.data.data_ptr.values():
+        dev.polyline(d[0], d[1], color.BLUE, 0.002)
+
+    drawaxis.draw_axis(dev)
+        
 def draw_surface_normal(dev, v3d, mesh, f, N):
 	c,d = mesh3d.compute_face_center(f, mesh.tnode)
 	cp = (d[0]+c[0], d[1]+c[1])
