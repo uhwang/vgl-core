@@ -18,17 +18,24 @@ from . import fontid
 from . import fontm
 
 # single_char : digit or char
-def glyp_to_line(fontid, single_char, xflip=False, yflip=True):
-
-    font_map = fontm.font_manager.get_font_map(fontid)
+def glyp_line(glyp):
+    return glyp_to_line(None, None, False, True, glyp)
     
-    if isinstance(single_char, int):
-        pass
-    elif isinstance(single_char, str):
-        if len(str) > 1: single_char = single_char[0]
-        single_char = ord(single_char)
+def glyp_to_line(fontid, single_char, xflip=False, yflip=True, glyp_given=None):
+
+    if fontid != None and single_char != None:
+        font_map = fontm.font_manager.get_font_map(fontid)
         
-    glyp = font_map[single_char-ord(' ')]
+        if isinstance(single_char, int):
+            pass
+        elif isinstance(single_char, str):
+            if len(single_char) > 0: single_char = single_char[0]
+            single_char = ord(single_char)
+            
+        glyp = font_map[single_char-ord(' ')]
+    else:
+        glyp = glyp_given
+        
     xmin, xmax, ymin, ymax = 100, -100, 100, -100
     glyp_lines, line = [], []
     
@@ -37,10 +44,6 @@ def glyp_to_line(fontid, single_char, xflip=False, yflip=True):
             glyp_lines.append(line)
             line = []
         else:
-            if p[0] < xmin : xmin = p[0]
-            if p[0] > xmax : xmax = p[0]
-            if p[1] < ymin : ymin = p[1]
-            if p[1] > ymax : ymax = p[1]
             line.append(p)
     
     if len(line) > 0:
@@ -49,7 +52,7 @@ def glyp_to_line(fontid, single_char, xflip=False, yflip=True):
     point_list = []
     y_flip = 1
     if yflip: y_flip = -1
-    
+
     for gl in glyp_lines:
         npnt = len(gl)
         x = np.zeros(npnt)
@@ -58,6 +61,10 @@ def glyp_to_line(fontid, single_char, xflip=False, yflip=True):
         for i, p in enumerate(gl):
             x[i] = p[0]
             y[i] = p[1]*y_flip
+            if x[i] < xmin : xmin = x[i]
+            if x[i] > xmax : xmax = x[i]
+            if y[i] < ymin : ymin = y[i]
+            if y[i] > ymax : ymax = y[i]        
             
         point_list.append((x,y))
         
