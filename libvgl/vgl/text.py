@@ -10,6 +10,8 @@
 
 import math
 import numpy as np
+import re
+
 from . import color
 from . import rotation
 from . import fontid as fontid
@@ -159,9 +161,9 @@ class Point():
         self.y = y
 
 def get_next_token(txt, idx):
-    i_token = 0
-    for s in txt[idx:]:
-        if s.isspace() == True: break
+    i_token = 1
+    for s in txt[idx+1:]:
+        if s.isalpha() == False: break
         i_token += 1
     return txt[idx:idx+i_token], i_token
     
@@ -227,8 +229,9 @@ def write_text(dev, t, viewport=True):
             if glyp:
                 ich += i_token
                 non_escape = False
-            else:
-                non_escape = True
+        else:
+            non_escape = True
+            
         if non_escape:
             glyp = font_map[ord(t.text[ich])-ord(' ')]
             ich += 1
