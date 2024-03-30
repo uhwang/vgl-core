@@ -284,7 +284,7 @@ class Axis(LineLevelC):
         self.minor_grid          = Grid(show=False)
         self.nminor_tick         = 4
         self.update_tick(amin, amax)
-        self.label               = Label()
+        self.label               = Label(size=0.02)
         self.arrow_start         = False
         self.arrow_end           = False
 
