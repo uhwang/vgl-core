@@ -10,7 +10,7 @@ from . import device
 from . import color
 from . import linepat
 from . import patline
-from . import drvps
+from . import drvaps
 from . import devval
 
 class DeviceAPS(device.DeviceVector):
