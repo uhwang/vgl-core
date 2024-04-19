@@ -2,13 +2,13 @@
 '''
     devps.py 
 '''
+import numpy as np
 
 from . import device
 from . import color
 from . import linepat
 from . import patline
 from . import drvps
-from . import paper 
 from . import devval
 
 class DevicePS(device.DeviceVector):
@@ -18,8 +18,9 @@ class DevicePS(device.DeviceVector):
         gbox, 
         size=(8.5,11.0), 
         dev_type = devval.DEV_PS, 
-        layout_dir=paper.paper_dir_portrait):
+        layout_dir=devval.layout_dir_portrait):
         
+        super().__init__()
         self.dev = drvps.PSDrive(fname, gbox, size[0], size[1],
                                  dev_type, layout_dir)
         self.pen = False
