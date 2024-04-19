@@ -32,6 +32,7 @@ from . devsvg     import *
 from . devaps     import *
 from . drvemf     import *
 from . drvpdf     import *
+from . drvaps     import *
 from . emfconst   import *
 from . paper      import *
 from . basicshape import * 
