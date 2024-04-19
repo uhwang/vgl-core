@@ -23,14 +23,13 @@ from . drawfrm    import *
 from . drawgrid   import *
 from . device     import *
 from . devwmf     import *
-from . devicanv   import *
+from . devcnv     import *
 from . devemf     import *
 from . devcairo   import *
 from . devpdf     import *
 from . devppt     import *
 from . devsvg     import *
-from . devps      import *
-from . drvps      import *
+from . devaps     import *
 from . drvemf     import *
 from . drvpdf     import *
 from . emfconst   import *
