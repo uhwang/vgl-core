@@ -94,6 +94,10 @@ def Polyline(slide, x, y, lcol, lthk, lpat, fcol, closed):
         if isinstance(fcol, color.Color):
             line_shape.fill.solid()
             line_shape.fill.fore_color.rgb = RGBColor(fcol.r, fcol.g, fcol.b)
+            # lcol is None, set lcol as fcol if not the default colot works
+            if not isinstance(lcol, color.Color):
+                line_shape.line.color.rgb = RGBColor(fcol.r, fcol.g, fcol.b)
+                line_shape.line.width = Inches(0.001) # dummy thinkness
         else:
             line_shape.fill.background()    
     
