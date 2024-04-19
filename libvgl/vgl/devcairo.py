@@ -119,7 +119,12 @@ class DeviceIMG(device.DeviceRaster):
             if lpat==linepat._PAT_SOLID and (lcol or self.pen.lcol):
                 self.cntx.fill_preserve()
             else:
-                self.cntx.fill()
+                # lcol is None. dark white line comes up.
+                #self.cntx.fill()
+                self.cntx.fill_preserve()
+                self.make_pen(fcol, 0.001)
+                self.cntx.stroke()
+                self.delete_pen()
             
         if lpat==linepat._PAT_SOLID and (lcol or self.pen.lcol):
             if lcol: 
@@ -161,7 +166,8 @@ class DeviceIMG(device.DeviceRaster):
                     self.cntx.line_to(self.get_xl(x2),self.get_yl(y2))
             self.cntx.stroke()
             self.delete_pen()
-            
+        self.cntx.stroke()
+        
     def polyline(self, x, y, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, closed=False):
     
         if isinstance(lpat, linepat.LinePattern):
