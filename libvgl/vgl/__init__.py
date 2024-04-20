@@ -42,3 +42,4 @@ from . devutil    import *
 from . plotsym    import * 
 from . printtext  import *
 from . affine     import *
+from . arc        import *
