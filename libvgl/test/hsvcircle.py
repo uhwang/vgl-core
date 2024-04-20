@@ -3,22 +3,21 @@
    
 '''
 
-import numpy as np
+import math as mp
 import libvgl as vgl
 
 fmm = vgl.FrameManager()
 frm = fmm.create(0.5,0.5,4,4,vgl.Data(-1,1,-1,1))
-r1  = 1
-no  = 100
-cl  = vgl.create_color_table(0,360,1,1,no)
-dpi = np.pi*2/no
+rad, nop = 1, 100
+clt  = vgl.create_color_table(0,360,1,1,no)
+dpi = np.pi*2/nop
 
 def plot(dev):
     dev.set_device(frm)
-    for i in range(no):
-        xx = [0, r1*np.cos(i*dpi), r1*np.cos((i+1)*dpi)]
-        yy = [0, r1*np.sin(i*dpi), r1*np.sin((i+1)*dpi)]
-        dev.polygon(xx, yy, lcol=None, fcol=cl[i])
+    for i in range(nop):
+        xx = [0, rad*mp.cos(i*dpi), rad*mp.cos((i+1)*dpi)]
+        yy = [0, rad*mp.sin(i*dpi), rad*mp.sin((i+1)*dpi)]
+        dev.polygon(xx, yy, lcol=None, fcol=clt[i])
     vgl.draw_axis(dev)
     dev.close()
     
