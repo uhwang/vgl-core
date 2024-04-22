@@ -92,7 +92,7 @@ def arc(dev,
         fcol,
         viewport = False)
             
-def arc(dev,
+def larc(dev,
         xc            = 0,            # the x coord of the center
         yc            = 0,            # the y coord of the center
         radius        = 1,            # radius of the Arc
