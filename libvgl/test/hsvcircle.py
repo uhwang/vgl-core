@@ -9,7 +9,7 @@ import libvgl as vgl
 fmm = vgl.FrameManager()
 frm = fmm.create(0.5,0.5,4,4,vgl.Data(-1,1,-1,1))
 rad, nop = 1, 100
-clt  = vgl.create_color_table(0,360,1,1,no)
+clt  = vgl.create_color_table(0,360,1,1,nop)
 dpi = np.pi*2/nop
 
 def plot(dev):
