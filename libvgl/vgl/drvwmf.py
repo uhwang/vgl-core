@@ -13,15 +13,38 @@ import struct
 from . import wmfconst as wc
 from . size import BBox
 from . import color
-
+from . import metafunc
 
 _to_twip = lambda x: int((x)*wc.TWIP_PER_INCH)
 
+
+_am_header_member_print_format =\
+    "FileType      : %d"\
+    "HeaderSize    : %d"\
+    "Version       : %d"\
+    "FileSize      : %d"\
+    "NumOfObjects  : %d"\
+    "MaxRecordSize : %d"\
+    "NumOfParams   : %d"
+
+_pm_header_member_print_format =\
+    "MagicNumber: %d\n"\
+    "Handle     : %d\n"\
+    "Left       : %d\n"\
+    "Top        : %d\n"\
+    "Right      : %d\n"\
+    "Bottom     : %d\n"\
+    "Inch       : %d\n"\
+    "Reserved   : %d\n"\
+    "CheckSum   : %d\n"
+    
 def rshift_u32(val,n):
 	return ((val>>n)&(0x7fffffff>>n-1))
 
 class StandardMetaHeader():
+    
     def __init__(self):
+        self.format        ="=hhhLhLh"
         self.FileType      = 0x0001   #  2     
         self.HeaderSize    = 0x0009   # +2 = 4 
         self.Version       = 0x0300   # +2 = 6 
@@ -29,10 +52,12 @@ class StandardMetaHeader():
         self.NumOfObjects  = 0        # +2 = 12
         self.MaxRecordSize = 0        # +4 = 16
         self.NumOfParams   = 0        # +2 = 18
-        self.format="=hhhLhLh"
-        
+
     def get_format(self):
         return self.format
+        
+    def format_size(self):
+        return metafunc.get_format_size(self.format)
         
     def get_bytes(self):
         return struct.pack(
@@ -43,12 +68,29 @@ class StandardMetaHeader():
             self.FileSize,
             self.NumOfObjects,
             self.MaxRecordSize,
-            self.NumOfParams)	
-    
+            self.NumOfParams)
+            
+    def buf_to_header(self, buf):
+        h = struct.unpack(self.format, buf[:metafunc.get_format_size(self.format)])
+        self.FileType      = h[0]  
+        self.HeaderSize    = h[1] 
+        self.Version       = h[2]
+        self.FileSize      = h[3]
+        self.NumOfObjects  = h[4] 
+        self.MaxRecordSize = h[5] 
+        self.NumOfParams   = h[6]
+
+        return _am_header_member_print_format%(\
+                h[0], h[1], h[2],
+                h[3], h[4], h[5], h[6]
+               )
+        
 class PlaceableMetaHeader():
-    def __init__(self, bbox):
+
+    def __init__(self, bbox=None):
         self.format = "=LhhhhhhLh"
-        self.initialize(bbox)
+        if bbox != None:
+            self.initialize(bbox)
    
     def initialize(self, bbox):
         self.MagicNumber= wc.META_MAGICNUMBER
@@ -72,10 +114,13 @@ class PlaceableMetaHeader():
         self.CheckSum  ^= (self.Reserved & wc.META_KEYLOW)
         val             = self.Reserved & wc.META_KEYHIGH
         self.CheckSum  ^= rshift_u32(val, wc.META_KEYSHIFT)
-        
+
     def get_format(self):
         return self.format
         
+    def format_size(self):
+        return metafunc.get_format_size(self.format)
+                
     def get_bytes(self):
         return struct.pack(self.format, 
             self.MagicNumber, 
@@ -87,6 +132,23 @@ class PlaceableMetaHeader():
             self.Inch,
             self.Reserved,
             self.CheckSum)
+            
+    def buf_to_header(self, buf):
+        h = struct.unpack(self.format, buf[:metafunc.get_format_size(self.format)])
+        self.MagicNumber = h[0]
+        self.Handle      = h[1]
+        self.Left        = h[2]
+        self.Top         = h[3]
+        self.Right       = h[4]
+        self.Bottom      = h[5]
+        self.Inch        = h[6]
+        self.Reserved    = h[7]
+        self.CheckSum    = h[8]
+
+        return _pm_header_member_print_format%(\
+                h[0], h[1], h[2], h[3], 
+                h[4], h[5], h[6], h[7], h[8]
+               )
             
 class MetaRecord():
     def __init__(self, func, nparam):

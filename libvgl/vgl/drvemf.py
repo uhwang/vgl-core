@@ -14,15 +14,10 @@ import struct
 from . import emfconst as ec
 from . import color
 from . size import BBox
-        
+from . import metafunc
+
 _mm_per_inch = 25.4
 
-def get_format_size(format):
-    f_size = 0
-    for f in format:
-        if f == "L" or f == 'i': f_size += 4
-        elif f == "h": f_size += 2
-    return f_size
 
 _header_member_print_format =\
         "iType             : %d\n"\
@@ -55,7 +50,7 @@ _header_member_print_format =\
         "szlMicrometers_cy : %d\n"
 
 def unpack_header(format, buf):
-    h = struct.unpack(format, buf[:get_format_size(format)])
+    h = struct.unpack(format, buf[:metafunc.get_format_size(format)])
     return _header_member_print_format%(\
         h[0 ],h[1 ],
         h[2 ],h[3 ],h[4 ],h[5 ],
