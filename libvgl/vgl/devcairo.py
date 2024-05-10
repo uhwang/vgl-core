@@ -222,17 +222,19 @@ class DeviceIMG(device.DeviceRaster):
         pass
     
     def circle(self, x,y, rad, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=None):
-        if isinstance(lpat, linepat.LinePattern):
-            rrad = np.linspace(0, np.pi*2, self._circle_point)
-            x1 = x+rad*np.cos(rrad)
-            y1 = y+rad*np.sin(rrad)
-            self.polygon(x1, y1, lcol, lthk, lpat, fcol)
-        else:
-            cx = self._x_pixel(x)
-            cy = self._y_pixel(y)
-            rr = self.get_v(rad)
-            self.cntx.arc(cx,cy,rr,0,np.pi*2)
-            self.draw_geometry(lcol, lthk*self.frm.hgt(), lpat, fcol)
+        rrad = np.linspace(0, np.pi*2, self._circle_point)
+        x1 = x+rad*np.cos(rrad)
+        y1 = y+rad*np.sin(rrad)
+        
+        self.polygon(x1, y1, lcol, lthk, lpat, fcol)
+        #if isinstance(lpat, linepat.LinePattern):
+        #    self.polygon(x1, y1, lcol, lthk, lpat, fcol)
+        #else:
+        #    cx = self._x_pixel(x)
+        #    cy = self._y_pixel(y)
+        #    rr = self.get_v(rad)
+        #    self.cntx.arc(cx,cy,rr,0,np.pi*2)
+        #    self.draw_geometry(lcol, lthk*self.frm.hgt(), lpat, fcol)
             
     def symbol(self, x,y, sym):
         px, py = sym.update_xy(self._x_viewport(x),self._y_viewport(y))

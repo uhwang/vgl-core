@@ -23,7 +23,7 @@ from . drawfrm    import *
 from . drawgrid   import *
 from . device     import *
 from . devwmf     import *
-from . devcnv     import *
+from . devcan     import *
 from . devemf     import *
 from . devcairo   import *
 from . devpdf     import *
