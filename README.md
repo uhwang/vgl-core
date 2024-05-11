@@ -11,7 +11,7 @@ vgl package for distribution
    - pip install dist\libvgl-0.1-py3-none-any.whl
 
 3. Libvgl Architecture
-<img width="603" alt="Slide3" src="https://github.com/uhwang/vgl-core/assets/43251090/a4af4baa-6b16-41ca-a80a-ac846fd805d9">
+<img width="650" alt="Slide3" src="https://github.com/uhwang/vgl-core/assets/43251090/a4af4baa-6b16-41ca-a80a-ac846fd805d9">
 <img width="603" alt="Slide4" src="https://github.com/uhwang/vgl-core/assets/43251090/411fe316-4532-482d-969b-609210d81427">
 
 5. Usage
