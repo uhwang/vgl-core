@@ -15,13 +15,13 @@ from . gdiobj import Pen, Brush
 class DeviceIPycanvas(device.DeviceRaster):
     def __init__(self, gbox, dpi):
         super().__init__(gbox, dpi)
-        self.pen   = Pen()
+        self.pen     = Pen()
         self.prv_pen = Pen()
-        self.brush = Brush()
-        self.pos   = device.Position(0,0)
-        self.canvas= Canvas(width=self.gwid, height=self.ghgt)
-        self.lcol  = color.WHITE
-        self.fcol  = color.WHITE
+        self.brush   = Brush()
+        self.npos    = 0
+        self.canvas  = Canvas(width=self.gwid, height=self.ghgt)
+        self.lcol    = color.WHITE
+        self.fcol    = color.WHITE
         self.nlineto = 0
         
     def set_device(self, frm, extend=device._FIT_NONE):
@@ -59,18 +59,36 @@ class DeviceIPycanvas(device.DeviceRaster):
     def delete_brush(self):
         self.brush.fcol = None
         
-    def moveto(self, x, y):
-        self.pos.set(x,y)
+    def _moveto(self, x, y, viewport = False):
+        if self.nlineto > 0:
+            self.canvas.stroke()
+            self.nlineto = 0
+
+        self.canvas.begin_path()
+        self.canvas.move_to(dev.get_xl(x) if viewport else dev._x_pixel(x),
+                            dev.get_yl(y) if viewport else dev._y_pixel(y))
         
-    def lineto(self, x, y):
-        x1 = self._x_pixel(self.pos.x)
-        y1 = self._y_pixel(self.pos.y)
-        x2 = self._x_pixel(x)
-        y2 = self._y_pixel(y)
-        self.canvas.stroke_line(x1, y1, x2, y2)
+    def _lineto(self, x, y, viewport = False):
+        self.canvas.line_to(dev.get_xl(x) if viewport else dev._x_pixel(x),
+                            dev.get_yl(y) if viewport else dev._y_pixel(y))
         self.nlineto += 1
 
+    def moveto(self, x, y):
+        self._moveto(x,y)
+
+    def lmoveto(self, x, y):
+        self._moveto(x,y,True)
+
+    def lineto(self, x,y):
+        self._lineto(x,y)
+
+    def llineto(self,x,y):
+        self._lineto(x,y,True)
+
     def stroke(self):
+        if self.nlineto > 0:
+            self.canvas.stroke()
+            
         return self.canvas
         
     def create_pnt_list(self, x, y, convx, convy, pnt_type_tuple=False):
@@ -118,7 +136,7 @@ class DeviceIPycanvas(device.DeviceRaster):
         if closed:
             if isinstance(x, np.ndarray):
                 xp = np.append(x, x[0])
-                yp = np.append(x, y[0])
+                yp = np.append(y, y[0])
             elif isinstance(x, list):
                 xp = x.copy()
                 yp = y.copy()
@@ -131,14 +149,15 @@ class DeviceIPycanvas(device.DeviceRaster):
             self.create_pnt_list(xp, yp, self.get_xl, self.get_yl, True)
         else:
             self.create_pnt_list(xp, yp, self._x_pixel, self._y_pixel, True)
-            
+
         # fill polygon
         if closed and isinstance(fcol, color.Color):
             self.canvas.fill_style = color.get_style(fcol)
             self.canvas.fill_polygon(self.points)
-            if lcol == None:
+            if lcol is None:
                 self.canvas.stroke_style = color.get_style(fcol)
                 self.canvas.stroke_polygon(self.points)
+                self.canvas.close_path()
                 
         # patterned line
         if isinstance(lpat, linepat.LinePattern):
@@ -147,7 +166,6 @@ class DeviceIPycanvas(device.DeviceRaster):
                 
             pat_seg = patline.get_pattern_line(self, xp, yp, lpat.pat_len, 
                                                              lpat.pat_t)
-
             for p1 in pat_seg:
                 x1 = [ p2[0] for p2 in p1 ]
                 y1 = [ p2[1] for p2 in p1 ]
@@ -155,22 +173,13 @@ class DeviceIPycanvas(device.DeviceRaster):
                 for x2, y2 in zip(x1[1:], y1[1:]):
                     self.cavnas.line_to(self.get_xl(x2),self.get_yl(y2))
                     
-            if not isinstance(self.pen.lcol, color.Color):
+            if isinstance(self.pen.lcol, color.Color):
                 self.delete_pen()            
         # solid line       
         else:
             if lcol: 
                 self.make_pen(lcol, lthk*self.frm.hgt())
                 self.canvas.stroke_lines(self.points)
-            
-                if closed:
-                    self.canvas.close_path()
-                
-            #if closed: 
-            #    p1 = self.points[0]
-            #    p2 = self.points[-1]
-            #    self.canvas.stroke_line(p1[0], p1[1], p2[0], p2[1])
-        
                 self.delete_pen()
         
     def begin(self,lcol,lthk,fcol): 
@@ -217,16 +226,6 @@ class DeviceIPycanvas(device.DeviceRaster):
         xx, yy = [sx,ex], [sy,ey]
         self._polyline(xx,yy,lcol,lthk,lpat,None,False,True)
 
-        
-    def lmoveto(self, x, y):
-        self.pos.x = self.get_xl(x)
-        self.pos.y = self.get_yl(y)
-        
-    def llineto(self, x,y):
-        x2 = self.get_xl(x)
-        y2 = self.get_yl(y)
-        self.stroke_line(self.pos.x, self.pos.y, x2, y2)
-    
     def lpolygon(self, x, y, 
                        lcol=color.BLACK, 
                        lthk=0.001, 
