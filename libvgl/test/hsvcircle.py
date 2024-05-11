@@ -1,14 +1,12 @@
 '''
    hsvcircle.py
-   
 '''
-
 import math as mp
 import libvgl as vgl
 
 fmm = vgl.FrameManager()
-frm = fmm.create(0.5,0.5,4,4,vgl.Data(-1,1,-1,1))
 rad, nop = 1, 100
+frm = fmm.create(0.5,0.5,4,4,vgl.Data(-rad,rad,-rad,rad))
 clt  = vgl.create_color_table(0,360,1,1,nop)
 dpi = np.pi*2/nop
 
@@ -18,9 +16,8 @@ def plot(dev):
         xx = [0, rad*mp.cos(i*dpi), rad*mp.cos((i+1)*dpi)]
         yy = [0, rad*mp.sin(i*dpi), rad*mp.sin((i+1)*dpi)]
         dev.polygon(xx, yy, lcol=None, fcol=clt[i])
-    vgl.draw_axis(dev)
     dev.close()
-    
+
 def save():
     if __name__ == "__main__":
         import chkfld
