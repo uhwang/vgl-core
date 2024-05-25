@@ -141,7 +141,7 @@ class EhancedMetaHeader():
     def initialize(self):
         left, top, right, bottom = 0,0,self.bbox.wid(), self.bbox.hgt()
         
-        h_size = get_format_size(self.format)
+        h_size = metafunc.get_format_size(self.format)
         self.iType = ec.EMR_HEADER                               
         self.nSize = h_size                                      
         self.rclBounds_left   = int(left*self.dpi)       
