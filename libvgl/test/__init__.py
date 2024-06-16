@@ -27,4 +27,5 @@ from . import pythatree
 from . import pythatree45
 from . import starpolygon
 from . import starpolygon4
+from . import hsvcircle
 
