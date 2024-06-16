@@ -9,7 +9,7 @@
 #
 
 class Data():
-    def __init__(self, xmin=0, xmax=1, ymin=0, ymax=1, zmin=0, zmax=0):
+    def __init__(self, xmin=1e7, xmax=-1e7, ymin=1e7, ymax=-1e7, zmin=1e7, zmax=-1e7):
         self.xmin=xmin
         self.xmax=xmax 
         self.ymin=ymin 
