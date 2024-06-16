@@ -38,6 +38,12 @@ def f_aps():
 def f_ppt():
     return str(PurePath(f_path, "%s.pptx"%f_path))
  
+def f_mp4():
+    return str(PurePath(f_path, "%s.mp4"%f_path))
+
+def f_gif():
+    return str(PurePath(f_path, "%s.gif"%f_path))
+    
 if __name__ == "__main__":
     create_folder("./dummy")
     print(f_jpg())
