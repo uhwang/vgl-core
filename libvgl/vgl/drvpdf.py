@@ -99,6 +99,7 @@ class PDFDriver():
         self.clip_region = None
         self.gbbox = gbbox
         self.layout_dir = layout_dir
+        #self.ctm = _CTM_portrait if layout_dir == devval.layout_dir_portrait else _CTM_landscape
         self.compression = compression
         #self.prv_pen = bdiobj.Pen()
         self.fp = open(fname, "wb")
@@ -112,11 +113,11 @@ class PDFDriver():
 
     def DeletePen(self):
         buffer_2_list = ["q\n"] #saveDC
-        #if self.layout_dir == devval.layout_dir_portrait:
-        #    buffer_2_list.append(_CTM_portrait%(self.hgt*_points_inch))
-        #else:
-        #    buffer_2_list.append(_CTM_landscape)
-        buffer_2_list.append(_CTM_landscape)
+        if self.layout_dir == devval.layout_dir_portrait:
+            buffer_2_list.append(_CTM_portrait%(self.hgt*_points_inch))
+        else:
+            buffer_2_list.append(_CTM_landscape)
+        #buffer_2_list.append(_CTM_landscape)
         buffer_2_list.append("%1.4f %1.4f %1.4f RG\n"%(self.pen.lcol.r, self.pen.lcol.g, self.pen.lcol.b))
         buffer_2_list.append("%3.3f w\n"% self.pen.lthk)
         
@@ -143,20 +144,20 @@ class PDFDriver():
 
     def MoveTo(self, x, y):
         self.pen.buf.append("%3.4f %3.4f m\n"%
-                #(x if self.layout_dir == devval.layout_dir_portrait else -x,
-                (-x,
+                (x if self.layout_dir == devval.layout_dir_portrait else -x,
+                #(-x,
                  y))
         
     def LineTo(self, x, y):
         self.pen.buf.append("%3.4f %3.4f l\n"%
-                #(x if self.layout_dir == devval.layout_dir_portrait else -x,
-                (-x,
+                (x if self.layout_dir == devval.layout_dir_portrait else -x,
+                #(-x,
                 y))
         
     def Line(self, sx, sy, ex, ey, lcol=None, lthk=None):
-        #xx = [sx, ex] if self.layout_dir == devval.layout_dir_portrait\
-        #              else [-sx, -ex]
-        xx = [-sx, -ex]
+        xx = [sx, ex] if self.layout_dir == devval.layout_dir_portrait\
+                      else [-sx, -ex]
+        #xx = [-sx, -ex]
         yy = [sy, ey]
         self.Polyline(xx,yy,lcol,lthk,None,False)
 
@@ -166,11 +167,11 @@ class PDFDriver():
         fc = color.normalize(fcol) if fcol else fcol
         buffer_2_list = ["q\n"] #saveDC
         
-        #if self.layout_dir == devval.layout_dir_portrait:
-        #    buffer_2_list.append(_CTM_portrait%(self.hgt*_points_inch))
-        #else:
-        #    buffer_2_list.append(_CTM_landscape)
-        buffer_2_list.append(_CTM_landscape)
+        if self.layout_dir == devval.layout_dir_portrait:
+            buffer_2_list.append(_CTM_portrait%(self.hgt*_points_inch))
+        else:
+            buffer_2_list.append(_CTM_landscape)
+        #buffer_2_list.append(_CTM_landscape)
         
         if self.clip_region:
             #buffer_2_list.append("%3.4f %3.4f %3.4f %3.4f re n W\n"%\
@@ -188,14 +189,14 @@ class PDFDriver():
             buffer_2_list.append("%1.4f %1.4f %1.4f rg\n"%(fc.r, fc.g, fc.b))
             
         buffer_2_list.append("%3.3f %3.3f m\n"%
-                #(x[0] if self.layout_dir == devval.layout_dir_portrait else -x[0],
-                (-x[0],
+                (x[0] if self.layout_dir == devval.layout_dir_portrait else -x[0],
+                #(-x[0],
                 y[0]))
         
         for x1, y1 in zip(x[1:],y[1:]):
             buffer_2_list.append("%3.3f %3.3f l\n"%
-                #(x1 if self.layout_dir == devval.layout_dir_portrait else -x1,
-                (-x1,
+                (x1 if self.layout_dir == devval.layout_dir_portrait else -x1,
+                #(-x1,
                 y1))
         
         if closed:
@@ -235,11 +236,11 @@ class PDFDriver():
         w, h = ex-sx, ey-sy
         buffer_2 = ["q\nn\n"]
         
-        #if self.layout_dir == devval.layout_dir_portrait:
-        #    buffer_2.append(_CTM_portrait%(self.hgt*_points_inch))
-        #else:
-        #    buffer_2.append(_CTM_landscape)
-        buffer_2.append(_CTM_landscape)
+        if self.layout_dir == devval.layout_dir_portrait:
+            buffer_2.append(_CTM_portrait%(self.hgt*_points_inch))
+        else:
+            buffer_2.append(_CTM_landscape)
+        #buffer_2.append(_CTM_landscape)
         buffer_2.append("%3.4f %3.4f %3.4f %3.4f re\nW\nnWn"%(sx, sy, w, h))
         
         if self.compression:
@@ -294,8 +295,8 @@ class PDFDriver():
                      "/MediaBox [%3.4f %3.4f %3.4f %3.4f]\n"\
                      "/Contents [\n"%\
                       (0, 0,
-                       ey if self.layout_dir == devval.layout_dir_portrait else ex,
-                       ex if self.layout_dir == devval.layout_dir_portrait else ey)]
+                       ex if self.layout_dir == devval.layout_dir_portrait else ey,
+                       ey if self.layout_dir == devval.layout_dir_portrait else ex)]
         r_list = ""
         for i, k in enumerate(self.obj_list.keys()):
                 r_list += "%d 0 R "%k
