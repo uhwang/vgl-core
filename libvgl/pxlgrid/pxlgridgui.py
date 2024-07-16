@@ -43,8 +43,11 @@ from PyQt5.QtWidgets import ( QApplication,
 
 from libvgl import vgl, msg
 from math import fabs
-from .icons import icon_folder_open, icon_pxlgrid, icon_color_picker
-#from icons import icon_folder_open, icon_pxlgrid, icon_color_picker
+
+if __name__ == "__main__":
+    from icons import icon_folder_open, icon_pxlgrid, icon_color_picker
+else:
+    from .icons import icon_folder_open, icon_pxlgrid, icon_color_picker
 
 def print_pixelgrid(dev, m_left, m_top, f_wid, f_hgt, lcol, lthk, lpat, pxl_size):
  
