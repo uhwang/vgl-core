@@ -120,10 +120,13 @@ class Polygon(shape.Shape):
                 lpat=linepat._PAT_SOLID,
                 pat_len=0.04, 
                 fcol=None,
-                deg_shift=0
+                deg_shift=0,
+                ccw = True,
+                end_point=False
         ):
+        nvert1 = nvert if not end_point else nvert+1
         super().__init__( xc,yc, 
-                          nvert, 
+                          nvert1, 
                           edge, 
                           lcol, 
                           lthk, 
@@ -131,10 +134,15 @@ class Polygon(shape.Shape):
                           lpat, 
                           pat_len)
         step = 360.0/nvert
+        cw = 1 if ccw else -1
         for i in range(nvert):
-            rad = rotation.deg_to_rad(i*step+deg_shift)
+            rad = cw*rotation.deg_to_rad(i*step+deg_shift)
             self.vertex[i*2]=xc+edge*np.cos(rad)
             self.vertex[i*2+1]=yc+edge*np.sin(rad)
+            
+        if end_point:
+            self.vertex[-1] = self.vertex[1]
+            self.vertex[-2] = self.vertex[0]
             
     def __str__(self):
         return "x: %f\ny: %f\nnvert: %d\nedge: %f\n"\
