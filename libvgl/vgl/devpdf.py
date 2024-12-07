@@ -20,17 +20,24 @@ class DevicePDF(device.DeviceVector):
             fname, 
             gbox, 
             size=(8.5,11.0), 
-            layout_dir = devval.layout_dir_portrait,
+            pdir = "P",
             compression=False):
         super().__init__()
         self.gbox =gbox
         self.wid = size[0]        
-        self.hgt = size[1]        
+        self.hgt = size[1]
+        
+        if not pdir in "PpLl":
+            pdir = devval.layout_dir_portrait
+        else:
+            pdir = devval.layout_dir_portrait if pdir in "Pp" else\
+                   devval.layout_dir_landscape
+        
         self.dev = drvpdf.PDFDriver(fname, 
                                     gbox, 
                                     size[0], 
                                     size[1], 
-                                    layout_dir, 
+                                    pdir, 
                                     compression)
         self.pen = False
         self.brush = device.Brush()
@@ -240,6 +247,7 @@ class DevicePDF(device.DeviceVector):
     def close(self):
         self.dev.Close()
 
+'''
 def DevicePDFLandscape(
             fname, 
             gbox, 
@@ -251,3 +259,4 @@ def DevicePDFLandscape(
                      size, 
                      devval.layout_dir_landscape, 
                      compression)
+'''                     
