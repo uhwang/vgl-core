@@ -246,17 +246,3 @@ class DevicePDF(device.DeviceVector):
         
     def close(self):
         self.dev.Close()
-
-'''
-def DevicePDFLandscape(
-            fname, 
-            gbox, 
-            size=(8.5,11.0), 
-            compression=False):
-            
-    return DevicePDF(fname, 
-                     gbox, 
-                     size, 
-                     devval.layout_dir_landscape, 
-                     compression)
-'''                     
