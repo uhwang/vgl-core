@@ -180,7 +180,7 @@ def uniform_source(dev):
 
     vgl.draw_frame(dev)
     vgl.draw_center_axis(dev)
-    vgl.print_top_center(dev, "Unifor+Source")
+    vgl.print_top_center(dev, "Uniform+Source")
     
 def uniform_vortex(dev):
 
@@ -243,50 +243,53 @@ def uniform_rankin(dev):
     vgl.print_top_center(dev, "Rankine Oval")
     
 fmm  = vgl.FrameManager()
-frm1 = fmm.create(0.0, 0.0, 3,3, vgl.Data(-1, 1, -1, 1))
-frm2 = fmm.create(3.1, 0.0, 3,3, vgl.Data(-1, 1, -1, 1))
-frm3 = fmm.create(0.0, 3.1, 3,3, vgl.Data(-1, 1, -1, 1))
-frm4 = fmm.create(3.1, 3.1, 3,3, vgl.Data(-1, 1, -1, 1))
+frm1 = fmm.create(0.3, 0.3, 3.5,3.5, vgl.Data(-1, 1, -1, 1))
+frm2 = fmm.create(3.9, 0.3, 3.5,3.5, vgl.Data(-1, 1, -1, 1))
+frm3 = fmm.create(0.3, 3.9, 3.5,3.5, vgl.Data(-1, 1, -1, 1))
+frm4 = fmm.create(3.9, 3.9, 3.5,3.5, vgl.Data(-1, 1, -1, 1))
 
 def plot(dev):
     
-    #print("Unifor + Source")
+    print("... Unifor + Source")
     dev.set_device(frm1)
     uniform_source(dev)
     
-    #print("Unifor + Vortex")
+    print("... Unifor + Vortex")
     dev.set_device(frm2)
     uniform_vortex(dev)
     
-    #print("Unifor + Dipole")
+    print("... Unifor + Dipole")
     dev.set_device(frm3)
     uniform_dipole(dev)
     
-    #print("Rankin Oval")
+    print("... Rankin Oval")
     dev.set_device(frm4)
     uniform_rankin(dev)    
     
     dev.close()
     
 def save():
-    from . import chkfld
+    if __name__ == "__main__":
+        import chkfld
+    else:
+        from . import chkfld
     
     if not chkfld.create_folder("./potflow"):
         return
             
-    dev_img = vgl.DeviceIMG("./potflow/potflow.jpg", fmm.get_gbbox(), 300)
-    dev_pdf = vgl.DevicePDF("./potflow/potflow.pdf", fmm.get_gbbox())
-    dev_wmf = vgl.DeviceWMF("./potflow/potflow.wmf", fmm.get_gbbox())
-    dev_emf = vgl.DeviceEMF("./potflow/potflow.emf", fmm.get_gbbox())
-    dev_svg = vgl.DeviceSVG("./potflow/potflow.svg", fmm.get_gbbox(), 300)
-    dev_ppt = vgl.DevicePPT("./potflow/potflow.pptx",fmm.get_gbbox())
+    dev_img = vgl.DeviceIMG(chkfld.f_jpg(), fmm.get_gbbox(), 300)
+    dev_pdf = vgl.DevicePDF(chkfld.f_pdf(), fmm.get_gbbox())
+    dev_wmf = vgl.DeviceWMF(chkfld.f_wmf(), fmm.get_gbbox())
+    dev_emf = vgl.DeviceEMF(chkfld.f_emf(), fmm.get_gbbox())
+    dev_svg = vgl.DeviceSVG(chkfld.f_svg(), fmm.get_gbbox(), 300)
+    dev_ppt = vgl.DevicePPT(chkfld.f_ppt(), fmm.get_gbbox())
     
-    plot(dev_img)
-    plot(dev_pdf)
-    plot(dev_wmf)
-    plot(dev_emf)
-    plot(dev_svg)
-    plot(dev_ppt)
+    print('JPG'), plot(dev_img)
+    print('PDF'), plot(dev_pdf)
+    print('WMF'), plot(dev_wmf)
+    print('EMF'), plot(dev_emf)
+    print('SVG'), plot(dev_svg)
+    print('PPT'), plot(dev_ppt)
     
 if __name__ == "__main__":
     save()
