@@ -2,6 +2,7 @@
     drvpdf.py
     
     12/06/2024 ... Fix landscape bug
+    12/08/2024 ... Fix crop & compression
     
     Newline sould be 0x0A. Windows CR(0x0D), LF(0x0A) ==> 0x0A
     Object: 
@@ -11,7 +12,8 @@
         Drawing line
             1 0 obj <</Length ...>>
             stream
-            
+        
+        Drawing Commands
             path construction: m, l, c, v, y, re
             Path painting: S, s, F, f, f*, B, B*, b, b*, n
             Clipping: W, W*
@@ -98,13 +100,14 @@ _default_nobj = 3
 _translate = lambda x,y : "1.0000 0.0000 "\
                           "0.0000 1.0000 "\
                           "%3.4f %3.4f cm\n"%(x,y)
-
+                          
 _rotate = lambda phi : "%3.4f %3.4f "\
                        "%3.4f %3.4f "\
                        "0.0000 0.0000 cm\n"%(
                         math.cos(phi), math.sin(phi),
                        -math.sin(phi), math.cos(phi)
                        )
+                       
 _y_inverse = lambda hgt : "1.0000 0.0000 "\
                           "0.0000 -1.0000 "\
                           "0.0000 %3.4f cm\n"%(
@@ -116,7 +119,7 @@ _x_inverse = lambda wid : "-1.0000 0.0000 "\
                           "%3.4f 0.0000 cm\n"%(
                           wid
                           )
-                       
+
 class PDFDriver():
     def __init__(
             self, 
@@ -125,11 +128,10 @@ class PDFDriver():
             wid, 
             hgt, 
             layout_dir,
-            plot_area_only=False,
+            crop=False,
             compression=False):
-        self.wid = wid
-        self.hgt = hgt
-        self.obj_list = [bytes("stream\n", 'utf-8')]
+
+        self.obj_list = []
         self.file_size = 0
         self.cur_pen_index = 0
         self.pen = None
@@ -140,38 +142,30 @@ class PDFDriver():
         self.obj_length = 0
         self.cur_obj_index = 0
         self.rotate = 0
+        self.obj_length = 0
+        self._sx = 0
+        self._sy = 0
+        self._ex = wid*_points_inch
+        self._ey = hgt*_points_inch
         
-        self.obj_length += len(self.obj_list[0])
-        ex = self.wid*_points_inch
-        ey = self.hgt*_points_inch
-        
-        if plot_area_only:
-            self._sx = self.gbbox.sx
-            self._sy = self.gbbox.sy
-            self._ex = self.gbbox.ex
-            self._ey = self.gbbox.ey
-        else:
-            self._sx = 0
-            self._sy = 0
-            self._ex = ex
-            self._ey = ey
+        if crop:
+            self._sx = self.gbbox.sx*_points_inch
+            self._sy = self.gbbox.sy*_points_inch
+            self._ex = self.gbbox.ex*_points_inch
+            self._ey = self.gbbox.ey*_points_inch
         
         if layout_dir == devval.layout_dir_landscape:
             self.rotate = 90
-            obj_buffer_list = [ _translate(ex, 0), 
+            obj_buffer_list = [ _translate(self._ex, 0), 
                                 _rotate(util.deg_to_rad(90)),
                                 _y_inverse(self._ex)]
         else:
             obj_buffer_list = [ _y_inverse(self._ey)]
 
-        if self.compression:
-            obj_buffer = zlib.compress(bytes(''.join(obj_buffer_list), 'utf-8'))
-        else:
-            obj_buffer = bytes(''.join(obj_buffer_list), 'utf-8')
-                
+        obj_buffer = ''.join(obj_buffer_list) if self.compression else\
+                     bytes(''.join(obj_buffer_list), 'utf-8')
         self.obj_list.append(obj_buffer)
         self.obj_length += len(obj_buffer)
-        
         self.fp = open(fname, "wb")
         
     def MakePen(self, lcol, lthk):
@@ -187,12 +181,8 @@ class PDFDriver():
         for p in self.pen.buf:
             obj_buffer_list.append(p)
         obj_buffer_list.append("S\nQ\n")
-        
-        if self.compression:
-            obj_buffer = zlib.compress(bytes(''.join(obj_buffer_list), 'utf-8'))
-        else:
-            obj_buffer = bytes(''.join(obj_buffer_list), 'utf-8')
-
+        obj_buffer = ''.join(obj_buffer_list) if self.compression else\
+                     bytes(''.join(obj_buffer_list), 'utf-8')
         self.obj_list.append(obj_buffer)
         self.obj_length += len(obj_buffer)
         self.pen = None
@@ -242,39 +232,35 @@ class PDFDriver():
         else:
             obj_buffer_list.append("S\nQ\n")     # stroke and restoreDC
             
-        if self.compression:
-            obj_buffer = zlib.compress(bytes(''.join(obj_buffer_list), 'utf-8'))
-        else:
-            obj_buffer = bytes(''.join(obj_buffer_list), 'utf-8')
-            
+        obj_buffer = ''.join(obj_buffer_list) if self.compression else\
+                     bytes(''.join(obj_buffer_list), 'utf-8')
         self.obj_list.append(obj_buffer)
         self.obj_length += len(obj_buffer)
         
     def Polygon(self, x, y, lcol, lthk, fcol):
         self.Polyline(x,y,lcol,lthk,fcol,True)
     
+    #---------------------------------------------------------------
     # save    nq  ... save graphics state for remove clip
     # newpath n
     # rawRect "%.3f %.3f %.3f %.3f re\n", x, y, w, h
     # clip    W
     # newpath n
+    #---------------------------------------------------------------
+    
     def CreateClip(self, sx, sy, ex, ey):
         w, h = ex-sx, ey-sy
-        obj_buffer = ["q\nn\n%3.4f %3.4f %3.4f %3.4f re\nW\nnWn"%(sx, sy, w, h)]
-        
-        if self.compression:
-            obj_buffer = zlib.compress(bytes(''.join(buffer2), 'utf-8'))
-        else:
-            obj_buffer = bytes(''.join(obj_buffer), 'utf-8')
-        
+        obj_buffer_list = ["q\nn\n%3.4f %3.4f %3.4f %3.4f re\nW\nnWn"%(sx, sy, w, h)]
+        obj_buffer= ''.join(obj_buffer_list) if self.compression else\
+                     bytes(''.join(obj_buffer_list), 'utf-8')
         self.obj_list.append(obj_buffer)
         self.obj_length += len(obj_buffer)
 
+    #---------------------------------------------------------------
     # Q   Restore graphics state    
     # W	  Sets the clipping path to the path that is currently being constructed.
     # W*  Sets the clipping path to the intersection of the current clipping path 
     #     and the    path that is currently being constructed.
-    
     # Create and delete clip must be inside one stream unit.
     # Ex:   
     #   6 0 obj
@@ -291,16 +277,20 @@ class PDFDriver():
     #   Q 
     #   endstream
     #   endobj
+    #---------------------------------------------------------------
     
     def DeleteClip(self):
-        obj_buffer = "Q\n"
-        self.obj_list.append(bytes(obj_buffer,'utf-8'))
+        obj_buffer_list = ["Q\n"]
+        obj_buffer = ''.join(obj_buffer_list) if self.compression else\
+                     bytes(''.join(obj_buffer_list), 'utf-8')
+        self.obj_list.append(obj_buffer)
         self.obj_length += len(obj_buffer)
                 
-    #
-    # Currently, the total number of ojb is 4. The first 3 objs are headers.
+    #---------------------------------------------------------------
+    # Currently, the total number of ojb is 4. 
     # The 4th obj is the ploting commands. 
-    #
+    #---------------------------------------------------------------
+    
     def Close(self):
 
         obj1 = "1 0 obj\n<< /Type /Catalog /Pages 2 0 R>>\nendobj\n"
@@ -333,15 +323,24 @@ class PDFDriver():
         obj_pos.append(self.file_size)        
 
         # Write Obj 4
-        obj4 = bytes("4 0 obj\n<</Length %d>>\n"% self.obj_length, 'utf-8')
+        if self.compression:
+            zip_obj = zlib.compress(bytes(''.join(self.obj_list), 'utf-8'))
+            self.obj_length = len(zip_obj)
+        
+        obj4 = bytes("4 0 obj\n<</Length %d %s>>\nstream\n"%(
+                     self.obj_length,
+                     "/Filter [/FlateDecode]" if self.compression else ""), 'utf-8')
         self.file_size += len(obj4)
         self.fp.write(obj4)
 
-        for o in self.obj_list:
-            self.fp.write(o)
+        if self.compression:
+            self.fp.write(zip_obj)
+        else:
+            for o in self.obj_list:
+                self.fp.write(o)
         self.file_size += self.obj_length
         
-        obj4 = bytes("endstream\nendobj\n",'utf-8')
+        obj4 = bytes("\nendstream\nendobj\n",'utf-8')
         self.file_size += len(obj4)
         self.fp.write(obj4)   
         obj_pos.append(self.file_size)
@@ -357,6 +356,5 @@ class PDFDriver():
         self.fp.write(bytes("startxref\n%d\n"%start_xref,'utf-8'))
         self.fp.write(bytes("%%EOF",'utf-8'))
         self.fp.close()
-        
-      
-   
+
+# End of drvpdf.py        
