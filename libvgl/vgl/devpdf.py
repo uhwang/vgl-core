@@ -2,7 +2,8 @@
 
     devpdf.py
 
-    03/23/2023  
+    03/23/2023  Initial versioin
+    12/08/2024  Fix crop & compression
     
 '''
 
@@ -21,6 +22,7 @@ class DevicePDF(device.DeviceVector):
             gbox, 
             size=(8.5,11.0), 
             pdir = "P",
+            crop=False,
             compression=False):
         super().__init__()
         self.gbox =gbox
@@ -38,6 +40,7 @@ class DevicePDF(device.DeviceVector):
                                     size[0], 
                                     size[1], 
                                     pdir, 
+                                    crop,
                                     compression)
         self.pen = False
         self.brush = device.Brush()
