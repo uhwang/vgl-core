@@ -26,6 +26,7 @@ from . import color
 from . import vertex
 from . import axis
 from . import text
+from . import patch
 
 #from size import BBox, Rect
 #from data import Data
@@ -114,6 +115,8 @@ class Frame():
         self.fit_axis = fit_axis
         
         self.create_default_axis()
+        
+        self.patch = patch.Patch(self)
         # xy mode
         #self.xaxis1 = 
         #self.yaxis1 = 
@@ -131,7 +134,15 @@ class Frame():
         self.update_vertex()                  # compute frame vertex
    
     #def resize(self, wid, hgt):
-        
+     
+    def load_data(self, x, y):
+        if isinstance(self.data, Data):
+            self.data.load(x,y)
+        else:
+            self.data = Data()
+            self.data.load(x,y)
+            self.create_default_axis()
+     
     def create_default_axis(self):
         if isinstance(self.data, Data):
             if self.fit_axis == True:
@@ -485,12 +496,37 @@ class FrameManager():
     def __init__(self):
         self.f_list = dict()
         self.id = FrameId()
+        self.frm_array = None
         
     def create(self, sx, sy, wid, hgt, data=None):
         id = self.id.get()
         frm = Frame(id, sx, sy, wid, hgt, data)
         self.f_list[str(id)] = frm
         return frm
+        
+    def array(self, nrow, ncol, sx=0.3, sy=0.3, wid=3, hgt=3, xgap=0.02, ygap=0.02):
+    
+        if nrow <= 0 or ncol <= 0: return
+        
+        #sx = kargs['sx'] if kargs['sx'] else 0.3
+        #sy = kargs['sy'] if kargs['sy'] else 0.3
+        #wid = kargs['wid'] if kargs['wid'] else 3
+        #hgt = kargs['hgt'] if kargs['hgt'] else 3
+        #xgap = kargs['xgap'] if kargs['xgap'] else 0.05
+        #ygap = kargs['ygap'] if kargs['ygap'] else 0.05
+        
+        self.frm_array = []
+        for j in range(nrow):
+            #j_frm = []
+            for i in range(ncol):
+                i_gap = xgap if i > 0 else 0
+                j_gap = ygap if j > 0 else 0
+                #j_frm.append(self.create(sx+i*wid+i_gap,sy+j*hgt+j_gap,wid,hgt))
+                self.frm_array.append(self.create(sx+i*wid+i_gap,sy+j*hgt+j_gap,wid,hgt))
+            #self.frm_array.append(j_frm)
+ 
+    def subfrm(self, row, col):
+        return self.frm_array[row*col+col] if self.frm_array else None
         
     def delete(self, id):
         if self.id.find(id):
