@@ -11,26 +11,26 @@ from . import linetype
 from . import util
 from . import color
 
-_ARROWTYPE_OPEN         = 0x0001
-_ARROWTYPE_CLOSED       = 0x0002
-_ARROWTYPE_CLOSEDFILLED = 0x0003
-_ARROWTYPE_CLOSEDBLANK  = 0x0004
-_ARROWTYPE_DOT          = 0x0005
-_ARROWTYPE_VIKING       = 0x0010|_ARROWTYPE_CLOSED
-_ARROWTYPE_VIKINGFILLED = 0x0010|_ARROWTYPE_CLOSEDFILLED
-_ARROWTYPE_VIKINGBLANK  = 0x0010|_ARROWTYPE_CLOSEDBLANK
+_ARROW_HEAD_TYPE_OPEN         = 0x0001
+_ARROW_HEAD_TYPE_CLOSED       = 0x0002
+_ARROW_HEAD_TYPE_CLOSEDFILLED = 0x0003
+_ARROW_HEAD_TYPE_CLOSEDBLANK  = 0x0004
+_ARROW_HEAD_TYPE_DOT          = 0x0005
+_ARROW_HEAD_TYPE_VIKING       = 0x0010|_ARROW_HEAD_TYPE_CLOSED
+_ARROW_HEAD_TYPE_VIKINGFILLED = 0x0010|_ARROW_HEAD_TYPE_CLOSEDFILLED
+_ARROW_HEAD_TYPE_VIKINGBLANK  = 0x0010|_ARROW_HEAD_TYPE_CLOSEDBLANK
 
 _ARROWPOS_START         = 0x0100
 _ARROWPOS_END           = 0x0101
 
-_HEAD_CLOSED       = lambda b : b & _ARROWTYPE_CLOSED
-_HEAD_CLOSEDFILLED = lambda b : b & _ARROWTYPE_CLOSEDFILLED
-_HEAD_CLOSEDBLANK  = lambda b : b & _ARROWTYPE_CLOSEDBLANK
+_HEAD_CLOSED       = lambda b : b & _ARROW_HEAD_TYPE_CLOSED
+_HEAD_CLOSEDFILLED = lambda b : b & _ARROW_HEAD_TYPE_CLOSEDFILLED
+_HEAD_CLOSEDBLANK  = lambda b : b & _ARROW_HEAD_TYPE_CLOSEDBLANK
 
-_arrow_angle         = 15 # degree
-_arrow_length_0      = 0.01 # 
-_arrow_length_1      = 0.05 # 
-_viking_xpos_scale   = 0.7
+_ARROW_HEAD_ANGLE    = 15   # degree
+_ARROW_HEAD_LENGTH_0 = 0.01 # 
+_ARROW_HEAD_LENGTH_1 = 0.05 # 
+_VIKING_XPOS_SCALE   = 0.7
 #_arrowhead_start = "START"
 #_arrowhead_end = "END"
 
@@ -39,7 +39,6 @@ BOX_POS_LEFTTOP     = 0x100001
 BOX_POS_LEFTBOTTOM  = 0x100002
 BOX_POS_RIGHTTOP    = 0x100003
 BOX_POS_RIGHTBOTTOM = 0x100004
- 
  
 class ArrowHead():
     def __init__(self, 
@@ -51,10 +50,10 @@ class ArrowHead():
                  show   = True,
                  col    = color.BLACK,
                  pos_t  = _ARROWPOS_START, 
-                 type_t = _ARROWTYPE_OPEN, 
-                 angle  = _arrow_angle, 
-                 length = _arrow_length_1):
-                 
+                 type_t = _ARROW_HEAD_TYPE_OPEN, 
+                 angle  = _ARROW_HEAD_ANGLE, 
+                 length = _ARROW_HEAD_LENGTH_0):
+        self.frm = frm
         self.show   = show
         self.pos_t  = pos_t
         self.type_t = type_t
@@ -62,7 +61,7 @@ class ArrowHead():
         self.length = length # length of arrow head
         self.col    = col
         
-        self.calculate_pos(frm, sx, sy, ex, ey)
+        self.calculate_pos(sx, sy, ex, ey)
         
     def set(self, col, type_t, angle, length):
         self.type_t = type_t
@@ -70,16 +69,13 @@ class ArrowHead():
         self.length = length # length of arrow head
         self.col    = col
         
-        
-    def calculate_pos(self, frm, sx, sy, ex, ey):
-    
+    def calculate_pos(self, sx, sy, ex, ey):
         theta = np.arctan2(ey-sy, ex-sx)
-        
         # find arrow head wing pos in local coord
-        wing = self.length*frm.hgt()
+        wing = self.length*self.frm.hgt()
         wing_x = wing*np.cos(util.deg_to_rad(self.angle))
         wing_y = wing*np.sin(util.deg_to_rad(self.angle))
-        vk_x   = wing_x*_viking_xpos_scale
+        vk_x   = wing_x*_VIKING_XPOS_SCALE
         vk_y   = 0
         
         if self.pos_t == _ARROWPOS_START:
@@ -92,9 +88,9 @@ class ArrowHead():
             self.vk        = util.rad_rotation(  -vk_x,    vk_y, -theta)
             
 def draw_arrow_head(dev, sx, sy, arrow, lcol, lthk, viewport):
-    
-    sx = dev._x_viewport(sx) if viewport==False else sx
-    sy = dev._y_viewport(sy) if viewport==False else sy
+
+    sx = sx if viewport else dev._x_viewport(sx)
+    sy = sy if viewport else dev._y_viewport(sy)
     xs = [sx+arrow.wing_up[0], sx, sx+arrow.wing_down[0], sx+arrow.wing_up[0]]
     
     if viewport == False:
@@ -104,30 +100,30 @@ def draw_arrow_head(dev, sx, sy, arrow, lcol, lthk, viewport):
         ys = [sy-arrow.wing_up[1], sy, sy-arrow.wing_down[1], sy-arrow.wing_up[1]]
         vky= sy-arrow.vk[1]
 
-    if arrow.type_t == _ARROWTYPE_VIKING or\
-       arrow.type_t == _ARROWTYPE_VIKINGFILLED or\
-       arrow.type_t == _ARROWTYPE_VIKINGBLANK:
+    if arrow.type_t == _ARROW_HEAD_TYPE_VIKING or\
+       arrow.type_t == _ARROW_HEAD_TYPE_VIKINGFILLED or\
+       arrow.type_t == _ARROW_HEAD_TYPE_VIKINGBLANK:
         xs.insert(-1,sx+arrow.vk[0])
         ys.insert(-1,vky)
         
     # open
-    if arrow.type_t == _ARROWTYPE_OPEN:
+    if arrow.type_t == _ARROW_HEAD_TYPE_OPEN:
         dev.lpolyline(xs[:3], ys[:3], lcol, lthk)
         
-    #elif arrow.type_t == _ARROWTYPE_CLOSED:
+    #elif arrow.type_t == _ARROW_HEAD_TYPE_CLOSED:
     elif _HEAD_CLOSED(arrow.type_t):
         dev.lpolygon(xs, ys, lcol=lcol, lthk=lthk, fcol=None)
         
-    #elif arrow.type_t == _ARROWTYPE_CLOSEDFILLED:
+    #elif arrow.type_t == _ARROW_HEAD_TYPE_CLOSEDFILLED:
     elif _HEAD_CLOSEDFILLED(arrow.type_t):
         dev.lpolygon(xs, ys, lcol=lcol, lthk=lthk, fcol=lcol)
         
-    #elif arrow.type_t == _ARROWTYPE_CLOSEDBLANK:
+    #elif arrow.type_t == _ARROW_HEAD_TYPE_CLOSEDBLANK:
     elif _HEAD_CLOSEDBLANK(arrow.type_t):
         dev.lpolygon(xs, ys, lcol=lcol, lthk=lthk, fcol=color.WHITE)
 
 # lcol, lthk, len_pat, pat_t
-class GenericLine(linetype.LineLevelC):
+class GenericArrowLine(linetype.LineLevelC):
     def __init__(self, 
                  frm, 
                  sx, 
@@ -139,10 +135,10 @@ class GenericLine(linetype.LineLevelC):
                  lpat      = linepat._PAT_SOLID,
                  pat_len   = 0.04,
                  show      = False,
-                 col       = color.BLACK,
-                 type_t    = _ARROWTYPE_OPEN, 
-                 angle     = _arrow_angle, 
-                 length    = _arrow_length_1, 
+                 acol      = color.BLACK,
+                 type_t    = _ARROW_HEAD_TYPE_OPEN, 
+                 angle     = _ARROW_HEAD_ANGLE, 
+                 length    = _ARROW_HEAD_LENGTH_1, 
                  viewport  = False):
                  
         super().__init__(lcol=lcol, lthk=lthk, lpat=lpat, pat_len=pat_len)
@@ -152,10 +148,13 @@ class GenericLine(linetype.LineLevelC):
         self.ex = ex
         self.ey = ey
         self.viewport = viewport
-        self.begin_arrow = ArrowHead(frm, sx,sy,ex,ey, 
-                                     show, col, _ARROWPOS_START, type_t, angle, length)
+        
+        if lcol != acol: acol = lcol
+        
+        self.begin_arrow = ArrowHead(frm, sx,sy,ex,ey,  
+                                     show, acol, _ARROWPOS_START, type_t, angle, length)
         self.end_arrow   = ArrowHead(frm, sx,sy,ex,ey, 
-                                     show, col, _ARROWPOS_END, type_t, angle, length)
+                                     show, acol, _ARROWPOS_END, type_t, angle, length)
     def __str__(self):
         return "Lcol : %s\nLthk : %f\nLpat : %s\nPat_len : %f\nShow : %s\n"\
                "Col  : %s\nType : %s\nAngle: %f\nLength: %f\nViewport : %s"%(
@@ -190,7 +189,7 @@ class GenericLine(linetype.LineLevelC):
             draw_arrow_head(dev, self.ex, self.ey, self.end_arrow, 
             acol, self.lthk, self.viewport)
 
-class ArrowLine(GenericLine):
+class ArrowLine(GenericArrowLine):
     def __init__(self, 
                  frm, 
                  sx, 
@@ -202,10 +201,10 @@ class ArrowLine(GenericLine):
                  lpat     = linepat._PAT_SOLID,
                  pat_len  = 0.04,                 
                  show     = True,
-                 col      = color.BLACK,
-                 type_t   = _ARROWTYPE_OPEN, 
-                 angle    = _arrow_angle, 
-                 length   = _arrow_length_1, 
+                 acol     = color.BLACK,
+                 type_t   = _ARROW_HEAD_TYPE_OPEN, 
+                 angle    = _ARROW_HEAD_ANGLE, 
+                 length   = _ARROW_HEAD_LENGTH_1, 
                  viewport = False):
                  
         super().__init__(frm, 
@@ -218,13 +217,54 @@ class ArrowLine(GenericLine):
                          lpat    = lpat, 
                          pat_len = pat_len,
                          show    = show, 
-                         col     = col, 
+                         acol    = acol,
                          type_t  = type_t, 
                          angle   = angle, 
                          length  = length, 
                          viewport= viewport)
+                         
+    def rtranslate(self, dx,dy):
+        self.sx += dx
+        self.sy += dy
+        self.ex += dx
+        self.ey += dy
+        self.begin_arrow.calculate_pos(self.sx, self.sy, self.ex, self.ey)
+        self.end_arrow.calculate_pos(self.sx, self.sy, self.ex, self.ey)
+
+    def translate(self, x,y):
+        dx = x - self.sx
+        dy = y - self.sy
+        self.sx = x
+        self.sy = y
+        self.ex += dx
+        self.ey += dy
+        self.begin_arrow.calculate_pos(self.sx, self.sy, self.ex, self.ey)
+        self.end_arrow.calculate_pos(self.sx, self.sy, self.ex, self.ey)
         
-class BeginArrowLine(GenericLine):
+    def rotate(self, deg, rad=False):
+        a1 = util.rad_rotation(self.sx, self.sy, deg) if rad else\
+             util.deg_rotation(self.sx, self.sy, deg)
+        a2 = util.rad_rotation(self.ex, self.ey, deg) if rad else\
+             util.deg_rotation(self.ex, self.ey, deg)
+        
+        self.sx, self.sy = a1[0], a1[1]
+        self.ex, self.ey = a2[0], a2[1]
+        self.begin_arrow.calculate_pos(self.sx, self.sy, self.ex, self.ey)
+        self.end_arrow.calculate_pos(self.sx, self.sy, self.ex, self.ey)
+
+    def rotatep(self, px, py, deg, rad=False):
+        
+        a1 = util.rad_rot_about_point(px, py, self.sx, self.sy, deg) if rad else\
+             util.deg_rot_about_point(px, py, self.sx, self.sy, deg)
+        a2 = util.rad_rot_about_point(px, py, self.ex, self.ey, deg) if rad else\
+             util.deg_rot_about_point(px, py, self.ex, self.ey, deg)
+        self.sx, self.sy = a1[0], a1[1]
+        self.ex, self.ey = a2[0], a2[1]
+        self.begin_arrow.calculate_pos(self.sx, self.sy, self.ex, self.ey)
+        self.end_arrow.calculate_pos(self.sx, self.sy, self.ex, self.ey)
+        
+#class BeginArrowLine(GenericArrowLine):
+class BeginArrowLine(ArrowLine):
     def __init__(self, 
                  frm, 
                  sx, 
@@ -236,10 +276,10 @@ class BeginArrowLine(GenericLine):
                  lpat     = linepat._PAT_SOLID,
                  pat_len  = 0.04,                 
                  show     = True,
-                 col      = color.BLACK,
-                 type_t   = _ARROWTYPE_OPEN, 
-                 angle    = _arrow_angle, 
-                 length   = _arrow_length_1,
+                 acol     = color.BLACK,
+                 type_t   = _ARROW_HEAD_TYPE_OPEN, 
+                 angle    = _ARROW_HEAD_ANGLE, 
+                 length   = _ARROW_HEAD_LENGTH_1,
                  viewport = False):
                  
         super().__init__(frm, 
@@ -252,14 +292,15 @@ class BeginArrowLine(GenericLine):
                          lpat    = lpat, 
                          pat_len = pat_len,
                          show    = show, 
-                         col     = col, 
+                         acol     = col, 
                          type_t  = type_t, 
                          angle   = angle, 
                          length  = length, 
                          viewport= viewport)
         self.end_arrow.show = False
         
-class EndArrowLine(GenericLine):
+#class EndArrowLine(GenericArrowLine):
+class EndArrowLine(ArrowLine):
     def __init__(self, 
                  frm, 
                  sx, 
@@ -271,19 +312,23 @@ class EndArrowLine(GenericLine):
                  lpat     = linepat._PAT_SOLID,
                  pat_len  = 0.04,                 
                  show     = True,
-                 col      = color.BLACK,
-                 type_t   = _ARROWTYPE_OPEN, 
-                 angle    = _arrow_angle, 
-                 length   = _arrow_length_1,
+                 acol     = color.BLACK,
+                 type_t   = _ARROW_HEAD_TYPE_OPEN, 
+                 angle    = _ARROW_HEAD_ANGLE, 
+                 length   = _ARROW_HEAD_LENGTH_1,
                  viewport = False):
                  
-        super().__init__(frm, sx, sy, ex, ey, 
+        super().__init__(frm, 
+                         sx, 
+                         sy, 
+                         ex, 
+                         ey, 
                          lcol    = lcol, 
                          lthk    = lthk, 
                          lpat    = lpat, 
                          pat_len = pat_len,
                          show    = show, 
-                         col     = col, 
+                         acol    = acol, 
                          type_t  = type_t, 
                          angle   = angle, 
                          length  = length, 
@@ -298,8 +343,8 @@ class Box(shape.Shape):
                  hgt      = 1,  # edge length
                  lcol     = color.BLACK,
                  lthk     = 0.001,
-                 fcol     = None, 
                  lpat     = linepat._PAT_SOLID,
+                 fcol     = None, 
                  pat_len  = 0.04,  
                  viewport = False,
                  pos_t    = BOX_POS_LEFTBOTTOM, 
@@ -525,7 +570,7 @@ class StarPolygon(shape.Shape):
     @property
     def u_radius(self):
         return np.sqrt(self.vertex[2]**2+self.vertex[3]**2)
-        
+    
     @property
     def u_param(self):
         return self._param_u
