@@ -43,3 +43,5 @@ from . plotsym    import *
 from . printtext  import *
 from . affine     import *
 from . arc        import *
+from . vaxis      import *
+from . patch      import *
