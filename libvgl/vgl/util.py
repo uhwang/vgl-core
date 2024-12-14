@@ -73,6 +73,18 @@ def deg_rotation_points(x, y, angle, new_copy=False):
 def rad_rotation_points(x, y, angle, new_copy=False):
     return rotation_points(x, y, angle, True, new_copy)
 
+'''
+    Ref: Mathematics for Computer Graphics by John Vince. p75
+    
+    |1 0 px| |cos(a) -sin(a)| |1 0 -px|
+    |0 1 py|x|sin(a)  cos(a)|x|0 1 -py|
+    |0 0  1| |  0       0   | |0 0   1|
+    
+    | cos(a)  -sin(a)  px*(1-cos(a))+py*sin(a)| |x|
+    | sin(a)   cos(a)  py*(1-cos(a))-px*sin(a)|x|y|
+    |   0        0                1           | |1|
+    
+'''
 def rot_about_points(px, py, xs, ys, angle, rad=True, dim=2):
     c, s = _c(angle, rad), _s(angle, rad)
     rm   = np.array([
