@@ -177,7 +177,7 @@ class DeviceIMG(device.DeviceRaster):
             if closed:
                 if isinstance(x, np.ndarray):
                     xp = np.append(x, x[0])
-                    yp = np.append(x, y[0])
+                    yp = np.append(y, y[0])
                 elif isinstance(x, list):
                     xp = x.copy()
                     yp = y.copy()
