@@ -322,25 +322,27 @@ class Plus(Symbol):
                     lcol=color.BLACK,
                     lthk=0.001,
                     fill=True,
-                    fcol=color.RED
+                    fcol=color.RED,
+                    param_u = 0.6
                 ):
         
         super().__init__(symbol_plus_name,nvert,size,lcol,lthk,True,fcol)
         self.hgt = hgt
+        self.param_u = param_u
         self.update(0,0)
     
     def update(self,x,y):
         edge = self.hgt * self.size
         h = edge*0.25
         self.vertex[0] = 2*h
-        self.vertex[1] = h*0.6
-        self.vertex[2] = h*0.6
-        self.vertex[3] = h*0.6
-        self.vertex[4] = h*0.6
+        self.vertex[1] = h*self.param_u
+        self.vertex[2] = h*self.param_u
+        self.vertex[3] = h*self.param_u
+        self.vertex[4] = h*self.param_u
         self.vertex[5] = 2*h
 
         xx, yy = self.vertex[0:6:2], self.vertex[1:7:2]
-        x_, y_ = affine.mirror_o(xx, yy, True)
+        x_, y_ = affine.mirror_o(xx, yy, False, True)
 
         # 2nd quadrant: y-mirror
         self.vertex[6:11:2] = flip(x_)
@@ -360,10 +362,11 @@ class Cross(Plus):
                     lcol=color.BLACK,
                     lthk=0.001,
                     fill=True,
-                    fcol=color.RED
+                    fcol=color.RED,
+                    param_u = 0.6
                 ):
         
-        super().__init__(size,hgt,nvert,lcol,lthk,True,fcol)
+        super().__init__(size,hgt,nvert,lcol,lthk,True,fcol,param_u)
         self.name = symbol_cross_name
         self.rotate(45)
         

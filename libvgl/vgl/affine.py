@@ -87,53 +87,37 @@ def shearxy(x, y, sfx, sfy, rad=False, keep_src=True):
 #  0  1  0
 #  0  0  1
     
-def mirror_(xx, keep_src):
+def mirror_(src, flip, keep_src):
 
-    if isinstance(xx, np.ndarray):
+    if isinstance(src, np.ndarray):
         if keep_src:
-            x_ = np.copy(xx)
+            src_ = np.copy(src)
         else:
-            x_ = xx
-        x_ *= -1
-    elif isinstance(xx, list):
+            src_ = src
+        src_ *= -1
+        if flip:
+            src_ = np.flip(src_) 
+    elif isinstance(src, list):
         if keep_src:
-            x_ = copy.deepcopy(xx)
+            src_ = copy.deepcopy(src)
         else:
-            x_ = xx
-        x_[:] = [-x for x in xx]
+            src_ = src
+        src_[:] = [-x for x in src]
+        src_ = src_.reverse()
     else:
         if keep_src:
-            x_ = copy.deepcopy(xx)
+            src_ = copy.deepcopy(src)
         else:
-            x_ = xx
-        x_ *= -1
+            src_ = src
+        src_ *= -1
         
-    return x_
+    return src_
     
-def mirror(xx,yy,mirror_dir, keep_src):    
-    x_, y_ = xx, yy
+def mirror(src,flip=False,keep_src=True):
+    return mirror_(src,flip,keep_src)
     
-    if mirror_dir == _mirror_dir_x:
-        y_ = mirror_(yy, keep_src)
-        
-    elif mirror_dir == _mirror_dir_y:
-        x_ = mirror_(xx, keep_src)
-        
-    elif mirror_dir == _mirror_dir_o:
-        x_ = mirror_(xx, keep_src)
-        y_ = mirror_(yy, keep_src)
-    
-    return x_, y_
-    
-def mirror_x(y,keep_src=True):
-    x_, y_ = mirror(None,y,_mirror_dir_x,keep_src)
-    return y_
-    
-def mirror_y(x,keep_src=True):
-    x_, y_ = mirror(x,None,_mirror_dir_y,keep_src)
-    return x_
-
-def mirror_o(x,y,keep_src=True):
-    x_, y_ = mirror(x,y,_mirror_dir_o,keep_src)
+def mirror_o(x,y,flip=False,keep_src=True):
+    x_ = mirror_(x,flip,keep_src)
+    y_ = mirror_(y,flip,keep_src)
     return x_, y_
 
