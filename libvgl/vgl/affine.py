@@ -3,12 +3,17 @@ affine.py
 
 
 '''
+import copy
 import numpy as np
 import libvgl as vgl
 
 _shear_dir_x = 0
 _shear_dir_y = 1
 _shear_dir_xy = 2
+
+_mirror_dir_x = 3
+_mirror_dir_y = 4
+_mirror_dir_o = 5 # mirror around origin (0,0)
 
 def scale(x, y, sfx, sfy):
     if isinstance(x, np.ndarray):
@@ -81,3 +86,54 @@ def shearxy(x, y, sfx, sfy, rad=False, keep_src=True):
 # -1  0  0
 #  0  1  0
 #  0  0  1
+    
+def mirror_(xx, keep_src):
+
+    if isinstance(xx, np.ndarray):
+        if keep_src:
+            x_ = np.copy(xx)
+        else:
+            x_ = xx
+        x_ *= -1
+    elif isinstance(xx, list):
+        if keep_src:
+            x_ = copy.deepcopy(xx)
+        else:
+            x_ = xx
+        x_[:] = [-x for x in xx]
+    else:
+        if keep_src:
+            x_ = copy.deepcopy(xx)
+        else:
+            x_ = xx
+        x_ *= -1
+        
+    return x_
+    
+def mirror(xx,yy,mirror_dir, keep_src):    
+    x_, y_ = xx, yy
+    
+    if mirror_dir == _mirror_dir_x:
+        y_ = mirror_(yy, keep_src)
+        
+    elif mirror_dir == _mirror_dir_y:
+        x_ = mirror_(xx, keep_src)
+        
+    elif mirror_dir == _mirror_dir_o:
+        x_ = mirror_(xx, keep_src)
+        y_ = mirror_(yy, keep_src)
+    
+    return x_, y_
+    
+def mirror_x(y,keep_src=True):
+    x_, y_ = mirror(None,y,_mirror_dir_x,keep_src)
+    return y_
+    
+def mirror_y(x,keep_src=True):
+    x_, y_ = mirror(x,None,_mirror_dir_y,keep_src)
+    return x_
+
+def mirror_o(x,y,keep_src=True):
+    x_, y_ = mirror(x,y,_mirror_dir_o,keep_src)
+    return x_, y_
+
