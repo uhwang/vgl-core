@@ -14,6 +14,7 @@ from . import color
 from . import linepat
 from . import patline
 from . import gdiobj
+from . import drawsymbol
 
 class DeviceIMG(device.DeviceRaster):
     def __init__(self, fname, gbox, dpi):
@@ -236,9 +237,11 @@ class DeviceIMG(device.DeviceRaster):
         #    self.cntx.arc(cx,cy,rr,0,np.pi*2)
         #    self.draw_geometry(lcol, lthk*self.frm.hgt(), lpat, fcol)
             
-    def symbol(self, x,y, sym):
-        px, py = sym.update_xy(self._x_viewport(x),self._y_viewport(y))
-        self.polygon(px,py,sym.lcol,sym.lthk,linepat._PAT_SOLID, sym.fcol, viewport=True)
+    #def symbol(self, x,y, sym):
+    def symbol(self, x,y, sym_str='o', size=0.02, deg=0, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=color.RED):
+        #px, py = sym.update_xy(self._x_viewport(x),self._y_viewport(y))
+        #self.polygon(px,py,sym.lcol,sym.lthk,linepat._PAT_SOLID, sym.fcol, viewport=True)
+        drawsymbol.draw_symbol(self,x,y,sym_str,size,deg,lcol,lthk,lpat,fcol)
         
     def lline(self, sx, sy, ex, ey, lcol=None, lthk=None, lpat=linepat._PAT_SOLID):
         if lcol: self.make_pen(lcol, lthk*self.frm.hgt())
@@ -277,7 +280,7 @@ class DeviceIMG(device.DeviceRaster):
             if closed:
                 if isinstance(x, np.ndarray):
                     xp = np.append(x, x[0])
-                    yp = np.append(x, y[0])
+                    yp = np.append(y, y[0])
                 elif isinstance(x, list):
                     xp = x.copy()
                     yp = y.copy()

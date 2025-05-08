@@ -13,6 +13,7 @@ from . import drvwmf as drv
 from . import linepat
 from . import patline
 from . import gdiobj
+from . import drawsymbol
 
 class DeviceWMF(device.DeviceVector):
     def __init__(self, fname, gbox):
@@ -131,13 +132,17 @@ class DeviceWMF(device.DeviceVector):
     def end_symbol(self):
         pass
         
-    def symbol(self, x,y,sym):
-        cx = self._x_viewport(x)
-        cy = self._y_viewport(y)
-        px, py = sym.update_xy(cx,cy)
-        self.drv.Polygon(px, py, sym.lcol, sym.lthk*self.frm.hgt(), sym.fcol)
+    #def symbol(self, x,y,sym):
+    #    cx = self._x_viewport(x)
+    #    cy = self._y_viewport(y)
+    #    px, py = sym.update_xy(cx,cy)
+    #    self.drv.Polygon(px, py, sym.lcol, sym.lthk*self.frm.hgt(), sym.fcol)
         #self.polygon(px,py,sym.lcol,sym.lthk,fcol=sym.fcol,viewport=True)
-    
+        
+    def symbol(self, x,y, sym_str='o', size=0.02,deg=0,lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=color.RED):
+        drawsymbol.draw_symbol(self,x,y,sym_str,size,deg,lcol,lthk,lpat,fcol)
+
+        
     def push(self):
         self.stack_gidobj.append((copy.deepcopy(self.pen), copy.deepcopy(self.brush)))
         
@@ -194,7 +199,7 @@ class DeviceWMF(device.DeviceVector):
             if closed:
                 if isinstance(x, np.ndarray):
                     xp = np.append(x, x[0])
-                    yp = np.append(x, y[0])
+                    yp = np.append(y, y[0])
                 elif isinstance(x, list):
                     xp = x.copy()
                     yp = y.copy()

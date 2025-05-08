@@ -77,6 +77,7 @@ from . import drvemf
 from . import linepat
 from . import patline
 from . import gdiobj
+from . import drawsymbol
 
 def Polyline(slide, x, y, lcol, lthk, lpat, fcol, closed):
 
@@ -283,11 +284,14 @@ class DevicePPT(device.DeviceVector):
     def end_symbol(self):
         pass        
         
-    def symbol(self, x,y,sym,draw=False):
-        px, py = sym.update_xy( self._x_viewport(x),
-                                self._y_viewport(y) )
-        self._polyline(px, py, sym.lcol, sym.lthk*self.frm.hgt(), 
-        linepat._PAT_SOLID, sym.fcol, closed=True, viewport=True)
+    #def symbol(self, x,y,sym,draw=False):
+    #    px, py = sym.update_xy( self._x_viewport(x),
+    #                            self._y_viewport(y) )
+    #    self._polyline(px, py, sym.lcol, sym.lthk*self.frm.hgt(), 
+    #    linepat._PAT_SOLID, sym.fcol, closed=True, viewport=True)
+    #    
+    def symbol(self, x,y, sym_str='o', size=0.02,deg=0,lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=color.RED):
+        drawsymbol.draw_symbol(self,x,y,sym_str,size,deg,lcol,lthk,lpat,fcol)
         
     def stroke(self):
         pass

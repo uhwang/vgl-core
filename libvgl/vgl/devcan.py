@@ -11,6 +11,7 @@ from . import device
 from . import linepat
 from . import patline
 from . gdiobj import Pen, Brush
+from . import drawsymbol
         
 class DeviceIPycanvas(device.DeviceRaster):
     def __init__(self, gbox, dpi):
@@ -208,12 +209,17 @@ class DeviceIPycanvas(device.DeviceRaster):
         y1 = y+rad*np.sin(rrad)
         self._polyline(x1, y1, lcol, lthk, lpat, fcol, True, False)
 
-    def symbol(self, x,y, sym):
-        px, py = sym.update_xy(self._x_viewport(x),self._y_viewport(y))
+    #def symbol(self, x,y, sym):
+    #    px, py = sym.update_xy(self._x_viewport(x),self._y_viewport(y))
+    #
+    #    self._polyline(px,py,sym.lcol,sym.lthk,
+    #                   linepat._PAT_SOLID, sym.fcol,True,True)
 
-        self._polyline(px,py,sym.lcol,sym.lthk,
-                       linepat._PAT_SOLID, sym.fcol,True,True)
-
+    def symbol(self, x,y, sym_str='o', size=0.02, deg=0, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=color.RED):
+        #px, py = sym.update_xy(self._x_viewport(x),self._y_viewport(y))
+        #self.polygon(px,py,sym.lcol,sym.lthk,linepat._PAT_SOLID, sym.fcol, viewport=True)
+        drawsymbol.draw_symbol(self,x,y,sym_str,size,deg,lcol,lthk,lpat,fcol)
+        
     def line(self, sx, sy, ex, ey, 
                    lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID):
     

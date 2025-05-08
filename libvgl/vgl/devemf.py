@@ -11,6 +11,7 @@ from . import drvemf
 from . import linepat
 from . import patline
 from . import gdiobj
+from . import drawsymbol
 
 class DeviceEMF(device.DeviceRaster):
     def __init__(self, fname, gbox, dpi=300):
@@ -138,15 +139,18 @@ class DeviceEMF(device.DeviceRaster):
         #self.delete_brush()
         pass
         
-    def symbol(self, x,y,sym,draw=False):
-        cx = self._x_viewport(x)
-        cy = self._y_viewport(y)
-        px, py = sym.update_xy(cx,cy)
-        ppx = [int(self.get_xl(px1)) for px1 in px]
-        ppy = [int(self.get_yl(py1)) for py1 in py]
-        #self.dev.Symbol(ppx,ppy)
-        self.dev.Polygon(ppx,ppy, sym.lcol, 
-        int(self.get_ylt(sym.lthk*self.frm.hgt())), sym.fcol)
+    #def symbol(self, x,y,sym,draw=False):
+    #    cx = self._x_viewport(x)
+    #    cy = self._y_viewport(y)
+    #    px, py = sym.update_xy(cx,cy)
+    #    ppx = [int(self.get_xl(px1)) for px1 in px]
+    #    ppy = [int(self.get_yl(py1)) for py1 in py]
+    #    #self.dev.Symbol(ppx,ppy)
+    #    self.dev.Polygon(ppx,ppy, sym.lcol, 
+    #    int(self.get_ylt(sym.lthk*self.frm.hgt())), sym.fcol)
+    
+    def symbol(self, x,y, sym_str='o', size=0.02, deg=0,lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=color.RED):
+        drawsymbol.draw_symbol(self,x,y,sym_str,size,deg,lcol,lthk,lpat,fcol)
     
     def circle(self, x,y, rad, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=None):
         rrad = np.linspace(0, np.pi*2, self._circle_point)
@@ -163,7 +167,7 @@ class DeviceEMF(device.DeviceRaster):
             if closed:
                 if isinstance(x, np.ndarray):
                     xp = np.append(x, x[0])
-                    yp = np.append(x, y[0])
+                    yp = np.append(y, y[0])
                 elif isinstance(x, list):
                     xp = x.copy()
                     yp = y.copy()

@@ -14,6 +14,7 @@ from . import drvpdf
 from . import linepat
 from . import patline
 from . import devval
+from . import drawsymbol
 
 class DevicePDF(device.DeviceVector):
     def __init__(
@@ -23,7 +24,7 @@ class DevicePDF(device.DeviceVector):
             size=(8.5,11.0), 
             pdir = "P",
             crop=False,
-            compression=False):
+            compression=True):
         super().__init__()
         self.gbox =gbox
         self.wid = size[0]        
@@ -169,13 +170,16 @@ class DevicePDF(device.DeviceVector):
     def end_symbol(self):
         pass        
         
-    def symbol(self, x,y,sym,draw=False):
-        cx = self._x_viewport(x)
-        cy = self._y_viewport(y)
-        px, py = sym.update_xy(cx,cy)
-        ppx = [px1*drvpdf._points_inch for px1 in px]
-        ppy = [py1*drvpdf._points_inch for py1 in py]
-        self.dev.Polygon(ppx, ppy, sym.lcol, sym.lthk*drvpdf._points_inch, sym.fcol)
+    #def symbol(self, x,y,sym,draw=False):
+    #    cx = self._x_viewport(x)
+    #    cy = self._y_viewport(y)
+    #    px, py = sym.update_xy(cx,cy)
+    #    ppx = [px1*drvpdf._points_inch for px1 in px]
+    #    ppy = [py1*drvpdf._points_inch for py1 in py]
+    #    self.dev.Polygon(ppx, ppy, sym.lcol, sym.lthk*drvpdf._points_inch, sym.fcol)
+        
+    def symbol(self, x,y, sym_str='o', size=0.02, deg=0,lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=color.RED):
+        drawsymbol.draw_symbol(self,x,y,sym_str,size,deg,lcol,lthk,lpat,fcol)
     
     def circle(self, x,y, rad, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=None):
         rrad = np.linspace(0, np.pi*2, self._circle_point)

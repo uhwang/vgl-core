@@ -12,6 +12,7 @@ from . import linepat
 from . import patline
 from . import drvaps
 from . import devval
+from . import drawsymbol
 
 class DeviceAPS(device.DeviceVector):
     def __init__(
@@ -23,7 +24,7 @@ class DeviceAPS(device.DeviceVector):
         layout_dir=devval.layout_dir_portrait):
         
         super().__init__()
-        self.dev = drvps.PSDrive(fname, gbox, size[0], size[1],
+        self.dev = drvaps.PSDrive(fname, gbox, size[0], size[1],
                                  dev_type, layout_dir)
         self.pen = False
 
@@ -96,13 +97,18 @@ class DeviceAPS(device.DeviceVector):
             _lthk = lthk*self.frm.hgt()
         self.dev.Polyline(self, x, y, lcol, _lthk, lpat, fcol, True, True)
         
-    def symbol(self, x,y,sym,draw=False):
-        cx = self._x_viewport(x)
-        cy = self._y_viewport(y)
-        px, py = sym.update_xy(cx,cy)
-        self.dev.Polyline(self, px, py, sym.lcol, sym.lthk, linepat._PAT_SOLID, 
-        sym.fcol if sym.fill else None, True, True)
+    #def symbol(self, x,y,sym,draw=False):
+    #    cx = self._x_viewport(x)
+    #    cy = self._y_viewport(y)
+    #    px, py = sym.update_xy(cx,cy)
+    #    self.dev.Polyline(self, px, py, sym.lcol, sym.lthk, linepat._PAT_SOLID, 
+    #    sym.fcol if sym.fill else None, True, True)
     
+    def symbol(self, x,y, sym_str='o', size=0.02, deg=0, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=color.RED):
+        #px, py = sym.update_xy(self._x_viewport(x),self._y_viewport(y))
+        #self.polygon(px,py,sym.lcol,sym.lthk,linepat._PAT_SOLID, sym.fcol, viewport=True)
+        drawsymbol.draw_symbol(self,x,y,sym_str,size,deg,lcol,lthk,lpat,fcol)
+     
     def circle(self, x,y, rad, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=None):
         if not self.pen:
             _lthk = lthk*self.frm.hgt()
