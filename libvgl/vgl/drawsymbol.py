@@ -41,9 +41,9 @@ def draw_symbol(dev,
                 if len(nu) > 1: 
                     if re.match(r'^[-+]?(\d+(\.\d*)?|\.\d+)$', nu[1]):
                         param_u = float(nu[1])
-    else:
-        print('Error: invalid symbol')
-        return
+        else:
+            print('Error: invalid symbol')
+            return
     
     symbol_name = symbol.get_symbol_name[sym_str]
     sym_obj = symbol.stock_symbol[symbol_name]
