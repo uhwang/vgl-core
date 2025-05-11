@@ -53,10 +53,21 @@ def draw_symbol(dev,
         sym_obj.param_u = param_u
 
     sym_obj.update(0,0)
+    
+    # in case lpolygon, reverse y coord
+    sym_obj.vertex[1::2] *= -1
+    
     if deg != 0:
         sym_obj.rotate(deg)
-    xss, yss = sym_obj.update_xy(x,y)
-    dev.polygon(xss, yss, lcol, lthk, lpat, fcol)
+    xss, yss = sym_obj.update_xy(dev._x_viewport(x),dev._y_viewport(y))
+    
+    # the shape of symbols is deformed under dev.polygon
+    # the shape will be shrinked in x direction if the limits 
+    # of x axis is bigger than y limit
+    
+    #dev.polygon(xss, yss, lcol, lthk, lpat, fcol)
+    
+    dev.lpolygon(xss, yss, lcol, lthk, lpat, fcol)
 
     
     

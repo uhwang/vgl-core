@@ -98,12 +98,16 @@ class DeviceEMF(device.DeviceRaster):
             else:
                 px = [int(self._x_pixel(xx)) for xx in x]
                 py = [int(self._y_pixel(yy)) for yy in y]
-                
-            # line, no fill
-            if     isinstance(lcol, color.Color) and\
-               not isinstance(fcol, color.Color):
-               
-                self.dev.Polygon(px,py,lcol, 
+              
+            # line
+            if isinstance(lcol, color.Color):
+                # fill
+                if isinstance(fcol, color.Color):
+                    self.dev.Polygon(px,py,lcol, 
+                                 int(self.get_ylt(lthk*self.frm.hgt())),fcol)
+                # no fill
+                else:
+                    self.dev.Polygon(px,py,lcol, 
                                  int(self.get_ylt(lthk*self.frm.hgt())),None)
             # no line, fill
             else:
@@ -204,7 +208,7 @@ class DeviceEMF(device.DeviceRaster):
         self.dev.LineTo(int(self.get_xl(x)),int(self.get_yl(y)))
         
     def lpolygon(self, x, y, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=None):
-        self.polygon(x,y,lcol,lthk,fcol,lpat,viewport=True)
+        self.polygon(x,y,lcol,lthk,lpat,fcol,viewport=True)
 
     def lpolyline(self, x, y, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, closed=False):
         #if lcol: 

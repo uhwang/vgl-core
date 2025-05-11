@@ -25,7 +25,7 @@ def _arc(dev,
          lthk_out     ,  # line thickness
          lpat_out     ,  # line pattern perimeter
          fcol         ,  # fill color (Color obj or None:default)
-         viewport     ,
+         viewport     
          ):
     
     ang1_rad = util.deg_to_rad(start_angle)
@@ -63,12 +63,12 @@ def arc(dev,
         end_angle     = 45,           # (degree)
         line_in       = False,        # Draw line from center to start/end pnt (T/F)
         lcol_in       = color.BLACK , # line color
-        lthk_in       = 0.001,        # line thickness
+        lthk_in       = 0.002,        # line thickness
         lpat_in       = linepat._PAT_SOLID, # line pattern ()
                                             # _PAT_SOLID is string, others are class obj
         line_out      = True,         # Draw perimeter (T/F)
         lcol_out      = color.BLACK , # line color
-        lthk_out      = 0.001,        # line thickness
+        lthk_out      = 0.002,        # line thickness
         lpat_out      = linepat._PAT_SOLID, # line pattern perimeter
                                             # _PAT_SOLID is string, others are class obj
         fcol          = None          # fill color
@@ -100,12 +100,12 @@ def larc(dev,
         end_angle     = 45,           # (degree)
         line_in       = False,        # Draw line from center to start/end pnt (T/F)
         lcol_in       = color.BLACK , # line color
-        lthk_in       = 0.001,        # line thickness
+        lthk_in       = 0.002,        # line thickness
         lpat_in       = linepat._PAT_SOLID, # line pattern ()
                                             # _PAT_SOLID is string, others are class obj
         line_out      = True,         # Draw perimeter (T/F)
         lcol_out      = color.BLACK , # line color
-        lthk_out      = 0.001,        # line thickness
+        lthk_out      = 0.002,        # line thickness
         lpat_out      = linepat._PAT_SOLID, # line pattern perimeter
                                             # _PAT_SOLID is string, others are class obj
         fcol          = None          # fill color
