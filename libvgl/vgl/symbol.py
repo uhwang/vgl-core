@@ -101,12 +101,12 @@ class Circle(Symbol):
             
     def update(self, x,y):
         nvert = self.get_nvertex()
-        len= self.hgt * self.size
+        edge= self.hgt * self.size
         step = 360.0/nvert
         for i in range(nvert):
             rad = deg_to_rad(i*step)
-            self.vertex[i*2]=x+len*cos(rad)
-            self.vertex[i*2+1]=y+len*sin(rad)
+            self.vertex[i*2]=x+edge*cos(rad)
+            self.vertex[i*2+1]=y+edge*sin(rad)
             
 class TriangleDown(Symbol):
     def __init__(
@@ -123,9 +123,9 @@ class TriangleDown(Symbol):
         self.update(0,0)
             
     def update(self, x,y):
-        len= self.hgt * self.size
-        hgt = len * 0.8660254
-        hs=len*0.5
+        edge= self.hgt * self.size
+        hgt = edge * 0.8660254
+        hs=edge*0.5
         hh=hgt*0.51
         
         self.vertex[0]=x-hs
@@ -150,9 +150,9 @@ class TriangleUp(Symbol):
         self.update(0,0)
             
     def update(self, x,y):
-        len= self.hgt * self.size
-        hgt = len * 0.8660254
-        hs=len*0.5
+        edge= self.hgt * self.size
+        hgt = edge * 0.8660254
+        hs=edge*0.5
         hh=hgt*0.5
         
         self.vertex[0]=x-hs
@@ -177,9 +177,9 @@ class TriangleRight(Symbol):
         self.update(0,0)
     
     def update(self, x, y):
-        len= self.hgt * self.size
-        hgt = len * 0.8660254
-        hs=len*0.5
+        edge= self.hgt * self.size
+        hgt = edge * 0.8660254
+        hs=edge*0.5
         hh=hgt*0.51
     
         self.vertex[0]=x-hh
@@ -204,9 +204,9 @@ class TriangleLeft(Symbol):
         self.update(0,0)
         
     def update(self, x, y):
-        len= self.hgt * self.size
-        hgt = len * 0.8660254
-        hs=len*0.5
+        edge= self.hgt * self.size
+        hgt = edge * 0.8660254
+        hs=edge*0.5
         hh=hgt*0.51
     
         self.vertex[0]=x-hh
@@ -231,8 +231,8 @@ class Diamond(Symbol):
         self.update(0,0)
         
     def update(self, x, y):
-        len= self.hgt * self.size
-        hh=0.546*len
+        edge= self.hgt * self.size
+        hh=0.546*edge
         
         self.vertex[0]=x
         self.vertex[1]=y+hh
@@ -258,8 +258,8 @@ class Square(Symbol):
         self.update(0,0)
         
     def update(self, x, y):
-        len= self.hgt * self.size
-        hh=0.5*len
+        edge= self.hgt * self.size
+        hh=0.5*edge
         
         self.vertex[0]=x-hh
         self.vertex[1]=y+hh
@@ -350,7 +350,7 @@ class Plus(Symbol):
         # 3rd quadrant: origin-mirror
         self.vertex[12:17:2] = x_
         self.vertex[13:18:2] = y_
-        # 4th quadrant: origin-mirror
+        # 4th quadrant: x-mirror
         self.vertex[18:24:2] = flip(xx)
         self.vertex[19:24:2] = flip(y_)
 
