@@ -15,6 +15,7 @@ from . import linepat
 from . import patline
 from . import gdiobj
 from . import drawsymbol
+from . import drawarrow
 
 class DeviceIMG(device.DeviceRaster):
     def __init__(self, fname, gbox, dpi):
@@ -242,6 +243,9 @@ class DeviceIMG(device.DeviceRaster):
         #px, py = sym.update_xy(self._x_viewport(x),self._y_viewport(y))
         #self.polygon(px,py,sym.lcol,sym.lthk,linepat._PAT_SOLID, sym.fcol, viewport=True)
         drawsymbol.draw_symbol(self,x,y,sym_str,size,deg,lcol,lthk,lpat,fcol)
+    
+    def arrow(self, sx, sy, ex, ey, style, size=0.02, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=color.RED):
+        drawarrow.draw_arrow(self, sx, sy, ex, ey, style, size, lcol, lthk, lpat, fcol)
         
     def lline(self, sx, sy, ex, ey, lcol=None, lthk=None, lpat=linepat._PAT_SOLID):
         if lcol: self.make_pen(lcol, lthk*self.frm.hgt())
@@ -271,7 +275,7 @@ class DeviceIMG(device.DeviceRaster):
     def llineto(self, x,y):
         self.cntx.line_to(self.get_xl(x),self.get_yl(y))
     
-    def lpolygon(self, x, y, lcol=color.BLACK, lthk=0.001, fcol=None, lpat=linepat._PAT_SOLID):
+    def lpolygon(self, x, y, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=None):
         self.polygon(x,y,lcol,lthk, lpat, fcol, viewport=True)
 
     def lpolyline(self, x, y, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, closed=False):

@@ -19,6 +19,7 @@ from . import linepat
 from . import patline
 from . import gdiobj
 from . import drawsymbol
+from . import drawarrow
 
 _line_format_begin = "<line x1=\"%3.3f\" y1=\"%3.3f\" x2=\"%3.3f\" y2=\"%3.3f\" "
 _line_format_end = " style=\"fill:none;stroke:rgb(%d,%d,%d);stroke-width:%d\" />\n"
@@ -107,7 +108,10 @@ class DeviceSVG(device.DeviceRaster):
         
     def symbol(self, x,y, sym_str='o', size=0.02,deg=0,lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=color.RED):
         drawsymbol.draw_symbol(self,x,y,sym_str,size,deg,lcol,lthk,lpat,fcol)
-                
+        
+    def arrow(self, sx, sy, ex, ey, style, size=0.02, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=color.RED):
+        drawarrow.draw_arrow(self, sx, sy, ex, ey, style, size, lcol, lthk, lpat, fcol)
+                        
     def end_symbol(self):  
         pass
             
