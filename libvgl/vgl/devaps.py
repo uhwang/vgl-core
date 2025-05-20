@@ -14,6 +14,7 @@ from . import drvaps
 from . import devval
 from . import drawsymbol
 from . import drawarrow
+from . import parselinepattern
 
 class DeviceAPS(device.DeviceVector):
     def __init__(

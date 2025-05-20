@@ -15,6 +15,7 @@ from . import patline
 from . import gdiobj
 from . import drawsymbol
 from . import drawarrow
+from . import parselinepattern
 
 class DeviceWMF(device.DeviceVector):
     def __init__(self, fname, gbox):
@@ -59,7 +60,16 @@ class DeviceWMF(device.DeviceVector):
             self.drv.MakePen(lcol, _lthk)
             pen_created = True
     
-        if isinstance(lpat, linepat.LinePattern):
+        if isinstance(lpat, linepat.LinePattern) or\
+            (lpat is not None and lpat != linepat._PAT_SOLID):
+            if isinstance(lpat, str):
+                try:
+                    p = parselinepattern.parse_line_pattern(lpat)
+                    lpat = linepat.LinePattern(p[1], p[0])
+                except Exception as e:
+                    print(e)
+                    return 
+                
             xp = [sx, ex]
             yp = [sy, ey]
             pat_seg = patline.get_pattern_line(self, xp, yp, lpat.pat_len, lpat.pat_t)
@@ -94,8 +104,9 @@ class DeviceWMF(device.DeviceVector):
         #if not isinstance(self.pen.lcol, color.Color):
             _lthk = lthk*self.frm.hgt()
             
-        pat_inst = isinstance(lpat, linepat.LinePattern)
-        
+        pat_inst = isinstance(lpat, linepat.LinePattern) or\
+                    (lpat is not None and lpat != linepat._PAT_SOLID)
+               
         if (pat_inst ==False and lcol) or fcol:
             if viewport:
                 px = x
@@ -109,6 +120,9 @@ class DeviceWMF(device.DeviceVector):
                 self.drv.Polygon(px,py,lcol=None,lthk=_lthk,fcol=fcol)
     
         if lcol and pat_inst:
+                
+        
+
             if isinstance(x, np.ndarray):
                 xp = np.append(x, x[0])
                 yp = np.append(y, y[0])

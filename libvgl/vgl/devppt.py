@@ -79,6 +79,7 @@ from . import patline
 from . import gdiobj
 from . import drawsymbol
 from . import drawarrow
+from . import parselinepattern
 
 def Polyline(slide, x, y, lcol, lthk, lpat, fcol, closed):
 
@@ -195,7 +196,8 @@ class DevicePPT(device.DeviceVector):
                         fcol=None, 
                         closed=False, 
                         viewport=False):
-        pat_inst = isinstance(lpat, linepat.LinePattern)
+        pat_inst = isinstance(lpat, linepat.LinePattern) or\
+        (lpat is not None and lpat != linepat._PAT_SOLID)
 
         #if lthk: _lthk = lthk*self.frm.hgt()
         #else: _lthk = 0
@@ -213,6 +215,14 @@ class DevicePPT(device.DeviceVector):
         # polyline/polygon and solid/patterened outline
         else:
             if pat_inst:
+                if isinstance(lpat, str):
+                    try:
+                        p = parselinepattern.parse_line_pattern(lpat)
+                        lpat = linepat.LinePattern(p[1], p[0])
+                    except Exception as e:
+                        print(e)
+                        return 
+                    
                 # fill the polygon
                 if fcol and closed:
                     lcol1 = fcol

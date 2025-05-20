@@ -13,6 +13,7 @@ from . import patline
 from . gdiobj import Pen, Brush
 from . import drawsymbol
 from . import drawarrow
+from . import parselinepattern
         
 class DeviceIPycanvas(device.DeviceRaster):
     def __init__(self, gbox, dpi):
@@ -162,7 +163,15 @@ class DeviceIPycanvas(device.DeviceRaster):
                 self.canvas.close_path()
                 
         # patterned line
-        if isinstance(lpat, linepat.LinePattern):
+        if isinstance(lpat, linepat.LinePattern) or (lpat is not None and lpat != linepat._PAT_SOLID):
+            if isinstance(lpat, str):
+                try:
+                    p = parselinepattern.parse_line_pattern(lpat)
+                    lpat = linepat.LinePattern(p[1], p[0])
+                except Exception as e:
+                    print(e)
+                    return          
+
             if not isinstance(self.pen.lcol, color.Color):
                 self.make_pen(lcol, lthk*self.frm.hgt())
                 

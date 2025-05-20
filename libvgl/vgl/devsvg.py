@@ -20,6 +20,7 @@ from . import patline
 from . import gdiobj
 from . import drawsymbol
 from . import drawarrow
+from . import parselinepattern
 
 _line_format_begin = "<line x1=\"%3.3f\" y1=\"%3.3f\" x2=\"%3.3f\" y2=\"%3.3f\" "
 _line_format_end = " style=\"fill:none;stroke:rgb(%d,%d,%d);stroke-width:%d\" />\n"
@@ -138,7 +139,15 @@ class DeviceSVG(device.DeviceRaster):
         
     def _line(self, sx, sy, ex, ey, lcol=None, lthk=None, lpat=linepat._PAT_SOLID, viewport=False):
             
-        if isinstance(lpat, linepat.LinePattern):
+        if isinstance(lpat, linepat.LinePattern) or (lpat is not None and lpat != linepat._PAT_SOLID):
+            if isinstance(lpat, str):
+                try:
+                    p = parselinepattern.parse_line_pattern(lpat)
+                    lpat = linepat.LinePattern(p[1], p[0])
+                except Exception as e:
+                    print(e)
+                    return 
+                    
             if not self.pen:
                 self.fp.write("<path d=\"\n")
 
@@ -227,7 +236,7 @@ class DeviceSVG(device.DeviceRaster):
         self._lineto(x,y, True)
         
     def polygon(self, x, y, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=None, viewport=False):
-        pat_inst = isinstance(lpat, linepat.LinePattern)
+        pat_inst = isinstance(lpat, linepat.LinePattern) or (lpat is not None and lpat != linepat._PAT_SOLID)
         
         if lthk:
             _lthk = lthk*self.frm.hgt()
@@ -254,6 +263,14 @@ class DeviceSVG(device.DeviceRaster):
                 self.fp.write(_polygon_format_end_nostroke%(fcol.r, fcol.g, fcol.b))
 
         if lcol and pat_inst:
+            if isinstance(lpat, str):
+                try:
+                    p = parselinepattern.parse_line_pattern(lpat)
+                    lpat = linepat.LinePattern(p[1], p[0])
+                except Exception as e:
+                    print(e)
+                    return 
+                    
             if isinstance(x, np.ndarray):
                 xp = np.append(x, x[0])
                 yp = np.append(y, y[0])
@@ -295,7 +312,15 @@ class DeviceSVG(device.DeviceRaster):
             xp = x
             yp = y
             
-        if isinstance(lpat, linepat.LinePattern):
+        if isinstance(lpat, linepat.LinePattern) or (lpat is not None and lpat != linepat._PAT_SOLID):
+            if isinstance(lpat, str):
+                try:
+                    p = parselinepattern.parse_line_pattern(lpat)
+                    lpat = linepat.LinePattern(p[1], p[0])
+                except Exception as e:
+                    print(e)
+                    return 
+                    
             self.fp.write("<path d=\"")
             if viewport:
                 pat_seg = patline.get_pattern_line(self, xp, yp, lpat.pat_len, lpat.pat_t, viewport=True)

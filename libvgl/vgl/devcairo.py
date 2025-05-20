@@ -16,6 +16,7 @@ from . import patline
 from . import gdiobj
 from . import drawsymbol
 from . import drawarrow
+from . import parselinepattern
 
 class DeviceIMG(device.DeviceRaster):
     def __init__(self, fname, gbox, dpi):
@@ -76,7 +77,16 @@ class DeviceIMG(device.DeviceRaster):
             self.make_pen(lcol, lthk*self.frm.hgt())
             pen_created = True
 
-        if isinstance(lpat, linepat.LinePattern):
+        if isinstance(lpat, linepat.LinePattern) or \
+            (lpat is not None and lpat != linepat._PAT_SOLID):
+            if isinstance(lpat, str):
+                try:
+                    p = parselinepattern.parse_line_pattern(lpat)
+                    lpat = linepat.LinePattern(p[1], p[0])
+                except Exception as e:
+                    print(e)
+                    return 
+                
             xp = [sx, ex]
             yp = [sy, ey]
             pat_seg = patline.get_pattern_line(self, xp, yp, lpat.pat_len, lpat.pat_t)
@@ -146,7 +156,16 @@ class DeviceIMG(device.DeviceRaster):
             _lthk = lthk*self.frm.hgt() if lthk else lthk
             self.draw_geometry(lcol, _lthk, lpat, fcol)
 
-        if lcol and isinstance(lpat, linepat.LinePattern):
+        if lcol and isinstance(lpat, linepat.LinePattern) or \
+            (lpat is not None and lpat != linepat._PAT_SOLID):
+            if isinstance(lpat, str):
+                try:
+                    p = parselinepattern.parse_line_pattern(lpat)
+                    lpat = linepat.LinePattern(p[1], p[0])
+                except Exception as e:
+                    print(e)
+                    return 
+                    
             if isinstance(x, np.ndarray):
                 xp = np.append(x, x[0])
                 yp = np.append(y, y[0])
@@ -172,7 +191,16 @@ class DeviceIMG(device.DeviceRaster):
         
     def polyline(self, x, y, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, closed=False):
     
-        if isinstance(lpat, linepat.LinePattern):
+        if isinstance(lpat, linepat.LinePattern) or \
+            (lpat is not None and lpat != linepat._PAT_SOLID):
+            if isinstance(lpat, str):
+                try:
+                    p = parselinepattern.parse_line_pattern(lpat)
+                    lpat = linepat.LinePattern(p[1], p[0])
+                except Exception as e:
+                    print(e)
+                    return 
+                
             if not isinstance(self.pen.lcol, color.Color):
                 self.make_pen(lcol, lthk)
                 
@@ -251,7 +279,16 @@ class DeviceIMG(device.DeviceRaster):
         if lcol: self.make_pen(lcol, lthk*self.frm.hgt())
         #else   : self.make_pen(self.pen.lcol, self.pen.lthk*self.frm.hgt())
         
-        if isinstance(lpat, linepat.LinePattern):
+        if isinstance(lpat, linepat.LinePattern) or \
+            (lpat is not None and lpat != linepat._PAT_SOLID):
+            if isinstance(lpat, str):
+                try:
+                    p = parselinepattern.parse_line_pattern(lpat)
+                    lpat = linepat.LinePattern(p[1], p[0])
+                except Exception as e:
+                    print(e)
+                    return 
+                
             x = [sx, ex]
             y = [sy, ey]
             pat_seg = patline.get_pattern_line(self, x, y, lpat.pat_len, lpat.pat_t, viewport=True)
@@ -280,7 +317,16 @@ class DeviceIMG(device.DeviceRaster):
 
     def lpolyline(self, x, y, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, closed=False):
     
-        if isinstance(lpat, linepat.LinePattern):
+        if isinstance(lpat, linepat.LinePattern) or \
+            (lpat is not None and lpat != linepat._PAT_SOLID):
+            if isinstance(lpat, str):
+                try:
+                    p = parselinepattern.parse_line_pattern(lpat)
+                    lpat = linepat.LinePattern(p[1], p[0])
+                except Exception as e:
+                    print(e)
+                    return 
+                
             if closed:
                 if isinstance(x, np.ndarray):
                     xp = np.append(x, x[0])

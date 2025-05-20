@@ -13,6 +13,7 @@ from . import patline
 from . import gdiobj
 from . import drawsymbol
 from . import drawarrow
+from . import parselinepattern
 
 class DeviceEMF(device.DeviceRaster):
     def __init__(self, fname, gbox, dpi=300):
@@ -56,7 +57,16 @@ class DeviceEMF(device.DeviceRaster):
         
     def line(self, sx, sy, ex, ey, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID):
 
-        if isinstance(lpat, linepat.LinePattern):
+        if isinstance(lpat, linepat.LinePattern) or \
+            (lpat is not None and lpat != linepat._PAT_SOLID):
+            if isinstance(lpat, str):
+                try:
+                    p = parselinepattern.parse_line_pattern(lpat)
+                    lpat = linepat.LinePattern(p[1], p[0])
+                except Exception as e:
+                    print(e)
+                    return 
+                    
             if not isinstance(self.pen.lcol, color.Color) and lcol: 
                 self.make_pen(lcol, lthk*self.frm.hgt())
             xp = [sx, ex]
@@ -90,7 +100,7 @@ class DeviceEMF(device.DeviceRaster):
     # viewport(False) : polygon
     
     def polygon(self, x, y, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=None, viewport=False):
-        pat_inst = isinstance(lpat, linepat.LinePattern)
+        pat_inst = isinstance(lpat, linepat.LinePattern) or (lpat is not None and lpat != linepat._PAT_SOLID)
 
         if pat_inst ==False and (lcol or fcol):
             if viewport:
@@ -115,6 +125,14 @@ class DeviceEMF(device.DeviceRaster):
                 self.dev.Polygon(px,py,None, None, fcol)
     
         if lcol and pat_inst:
+            if isinstance(lpat, str):
+                try:
+                    p = parselinepattern.parse_line_pattern(lpat)
+                    lpat = linepat.LinePattern(p[1], p[0])
+                except Exception as e:
+                    print(e)
+                    return 
+                    
             if isinstance(x, np.ndarray):
                 xp = np.append(x, x[0])
                 yp = np.append(y, y[0])
@@ -171,7 +189,16 @@ class DeviceEMF(device.DeviceRaster):
         if not isinstance(self.pen.lcol, color.Color) and lcol:
             self.dev.MakePen(lcol, int(self.get_xlt(lthk*self.frm.hgt())))
         
-        if isinstance(lpat, linepat.LinePattern):
+        if isinstance(lpat, linepat.LinePattern) or \
+            (lpat is not None and lpat != linepat._PAT_SOLID):
+            if isinstance(lpat, str):
+                try:
+                    p = parselinepattern.parse_line_pattern(lpat)
+                    lpat = linepat.LinePattern(p[1], p[0])
+                except Exception as e:
+                    print(e)
+                    return 
+                    
             if closed:
                 if isinstance(x, np.ndarray):
                     xp = np.append(x, x[0])
@@ -221,7 +248,16 @@ class DeviceEMF(device.DeviceRaster):
         if not isinstance(self.pen.lcol, color.Color):
             self.dev.MakePen(lcol, int(self.get_xlt(lthk*self.frm.hgt())))
             
-        if isinstance(lpat, linepat.LinePattern):
+        if isinstance(lpat, linepat.LinePattern) or \
+            (lpat is not None and lpat != linepat._PAT_SOLID):
+            if isinstance(lpat, str):
+                try:
+                    p = parselinepattern.parse_line_pattern(lpat)
+                    lpat = linepat.LinePattern(p[1], p[0])
+                except Exception as e:
+                    print(e)
+                    return 
+                    
             if closed:
                 if isinstance(x, np.ndarray):
                     xp = np.append(x, x[0])

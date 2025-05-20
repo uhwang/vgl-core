@@ -16,6 +16,7 @@ from . import patline
 from . import devval
 from . import drawsymbol
 from . import drawarrow
+from . import parselinepattern
 
 class DevicePDF(device.DeviceVector):
     def __init__(
@@ -79,7 +80,16 @@ class DevicePDF(device.DeviceVector):
             exp = self._x_viewport(ex)*drvpdf._points_inch
             eyp = self._y_viewport(ey)*drvpdf._points_inch
             
-        if isinstance(lpat, linepat.LinePattern):
+        if isinstance(lpat, linepat.LinePattern) or \
+            (lpat is not None and lpat != linepat._PAT_SOLID):
+            if isinstance(lpat, str):
+                try:
+                    p = parselinepattern.parse_line_pattern(lpat)
+                    lpat = linepat.LinePattern(p[1], p[0])
+                except Exception as e:
+                    print(e)
+                    return 
+                    
             self.polyline(xx,yy,lcol,lthk,lpat,viewport)
         else:
             if self.pen:
@@ -128,7 +138,7 @@ class DevicePDF(device.DeviceVector):
     # viewport(False) : polygon
     
     def polygon(self, x, y, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=None, viewport=False):
-        pat_inst = isinstance(lpat, linepat.LinePattern)
+        pat_inst = isinstance(lpat, linepat.LinePattern) or (lpat is not None and lpat != linepat._PAT_SOLID)
 
         #if lthk: 
         if not self.pen and lthk:
@@ -147,6 +157,14 @@ class DevicePDF(device.DeviceVector):
                 self.dev.Polygon(px,py,None,None,fcol)
     
         if lcol and pat_inst:
+            if isinstance(lpat, str):
+                try:
+                    p = parselinepattern.parse_line_pattern(lpat)
+                    lpat = linepat.LinePattern(p[1], p[0])
+                except Exception as e:
+                    print(e)
+                    return 
+                    
             if isinstance(x, np.ndarray):
                 xp = np.append(x, x[0])
                 yp = np.append(y, y[0])
@@ -192,7 +210,7 @@ class DevicePDF(device.DeviceVector):
         self.polygon(x1, y1, lcol, lthk, lpat, fcol)
         
     def polyline(self, x, y, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, closed=False, viewport=False):
-        pat_inst = isinstance(lpat, linepat.LinePattern)
+        pat_inst = isinstance(lpat, linepat.LinePattern) or (lpat is not None and lpat != linepat._PAT_SOLID)
 
         #if lthk: _lthk = lthk*drvpdf._points_inch
         #else: lthk = 0
@@ -217,6 +235,14 @@ class DevicePDF(device.DeviceVector):
     
         #if lcol and pat_inst:
         if not self.pen and lcol and pat_inst:
+            if isinstance(lpat, str):
+                try:
+                    p = parselinepattern.parse_line_pattern(lpat)
+                    lpat = linepat.LinePattern(p[1], p[0])
+                except Exception as e:
+                    print(e)
+                    return 
+                    
             if closed: 
                 if isinstance(x, np.ndarray):
                     xp = np.append(x, x[0])
