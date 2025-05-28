@@ -120,8 +120,13 @@ class DeviceWMF(device.DeviceVector):
                 self.drv.Polygon(px,py,lcol=None,lthk=_lthk,fcol=fcol)
     
         if lcol and pat_inst:
-                
-        
+            if isinstance(lpat, str):
+                try:
+                    p = parselinepattern.parse_line_pattern(lpat)
+                    lpat = linepat.LinePattern(p[1], p[0])
+                except Exception as e:
+                    print(e)
+                    return     
 
             if isinstance(x, np.ndarray):
                 xp = np.append(x, x[0])

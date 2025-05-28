@@ -24,30 +24,30 @@ def draw_symbol(dev,
                 fcol):
     param_u = None
     sym_str.replace(' ','')
-
+    star_symbol = None
     if not sym_str in symbol.symbol_string:
-        if ':' in sym_str:
-            if re.search(r"\*\d", sym_str):
+        match = re.search(r"\*(\d+)", sym_str)
+        if match:
+            star_symbol = True
+            nvert = int(match.group(1))
+            
+            if ':' in sym_str:
                 nu = sym_str.split(':')
-                nvert = int(nu[0][1:])
                 if len(nu) > 1: # param_u exist
-                    if re.match(r'^[-+]?(\d+(\.\d*)?|\.\d+)$', nu[1]):
-                        param_u = float(nu[1])
-                star_symbol = True
-                sym_str = nu[0][0:1]
-            else:
-                nu = sym_str.split(':')
-                sym_str = nu[0]
-                if len(nu) > 1: 
                     if re.match(r'^[-+]?(\d+(\.\d*)?|\.\d+)$', nu[1]):
                         param_u = float(nu[1])
         else:
             print('Error: invalid symbol')
             return
+    hgt = dev.frm.hgt()
     
-    symbol_name = symbol.get_symbol_name[sym_str]
-    sym_obj = symbol.stock_symbol[symbol_name]
-    sym_obj.hgt = dev.frm.hgt()
+    if star_symbol is not None:
+        sym_obj = symbol.Star(size, hgt, nvert=nvert)
+    else:
+        symbol_name = symbol.get_symbol_name[sym_str]
+        sym_obj = symbol.stock_symbol[symbol_name]
+    
+    sym_obj.hgt = hgt
     sym_obj.size = size
     if param_u is not None: 
         sym_obj.param_u = param_u

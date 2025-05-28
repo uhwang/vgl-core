@@ -46,6 +46,7 @@ symbol_pentagram_name      = symbol_name[10][0]
 symbol_hexgram_name        = symbol_name[11][0]
 symbol_plus_name           = symbol_name[12][0]
 symbol_cross_name          = symbol_name[13][0]
+symbol_star_name           = 'star'
 
 symbol_string = ','.join([ c[1] for c in symbol_name])
 get_symbol_name = {s[1]:s[0] for s in symbol_name}
@@ -305,7 +306,7 @@ class Star(Symbol):
                     param_u = None
                 ):
         
-        super().__init__(symbol_pentagon_name,nvert*2,size,lcol,lthk,True,fcol)
+        super().__init__(symbol_star_name,nvert*2,size,lcol,lthk,True,fcol)
         self.hgt = hgt
         self.param_u = param_u
         self.update(0,0)

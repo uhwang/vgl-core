@@ -31,7 +31,7 @@ class DevicePDF(device.DeviceVector):
         self.gbox =gbox
         self.wid = size[0]        
         self.hgt = size[1]
-        
+
         if not pdir in "PpLl":
             pdir = devval.layout_dir_portrait
         else:
