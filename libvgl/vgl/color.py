@@ -28,6 +28,8 @@ class Color():
         
     def get_tuple(self) : return (self.r, self.g, self.b)
         
+
+
 BLACK   = Color(0  ,  0,  0)
 WHITE   = Color(255,255,255)
 RED     = Color(255,  0,  0)
@@ -42,6 +44,7 @@ CUSTOM2 = Color(127,255,  0)
 CUSTOM3 = Color(0  ,255,127)
 CUSTOM4 = Color(127,  0,255)
 CUSTOM5 = Color(255,  0,127)
+GRAY10  = Color( 10, 10, 10)
 GRAY20  = Color( 20, 20, 20)
 GRAY30  = Color( 30, 30, 30)
 GRAY40  = Color( 40, 40, 40)
@@ -51,6 +54,40 @@ GRAY70  = Color( 70, 70, 70)
 GRAY80  = Color( 80, 80, 80)
 GRAY90  = Color( 90, 90, 90)
 GRAY100 = Color(100,100,100)
+
+color_name = "b,w,r,g,b,y,m,c,p,c1,c2,c3,c4,c5,g10,g20,g30,g40,g50,g60,g70,g80,g90,g100"
+
+default_color = {
+"k" : BLACK   ,
+"w" : WHITE   ,
+"r" : RED     ,
+"g" : GREEN   ,
+"b" : BLUE    ,
+"y" : YELLOW  ,
+"m" : MAGENTA ,
+"c" : CYAN    ,
+"p" : PURPLE  ,
+"c1" : CUSTOM1 ,
+"c2" : CUSTOM2 ,
+"c3" : CUSTOM3 ,
+"c4" : CUSTOM4 ,
+"c5" : CUSTOM5 ,
+"g10" : GRAY10  ,
+"g20" : GRAY20  ,
+"g30" : GRAY30  ,
+"g40" : GRAY40  ,
+"g50" : GRAY50  ,
+"g60" : GRAY60  ,
+"g70" : GRAY70  ,
+"g80" : GRAY80  ,
+"g90" : GRAY90  ,
+"g100" : GRAY100 
+}
+
+Gray = lambda p: Color(p,p,p)
+
+def create_gray_table(order, g1=0, g2=100):
+    return [Color(i,i,i) for i in range(g1, g2, int(100/order))]
 
 # SVG Color Codes
 # https://johndecember.com/html/spec/colorsvghex.html
@@ -180,7 +217,7 @@ snow              = Color(0xFF,0xFA,0xFA)
 springgreen       = Color(0x00,0xFF,0x7F)
 steelblue         = Color(0x46,0x82,0xB4)
 tan               = Color(0xD2,0xB4,0x8C)
-teal16            = Color(0x00,0x80,0x80)
+teal              = Color(0x00,0x80,0x80)
 thistle           = Color(0xD8,0xBF,0xD8)
 tomato            = Color(0xFF,0x63,0x47)
 turquoise         = Color(0x40,0xE0,0xD0)
@@ -313,7 +350,6 @@ snow              = Color(0xFF,0xFA,0xFA)
 springgreen       = Color(0x00,0xFF,0x7F)
 steelblue         = Color(0x46,0x82,0xB4)
 tan               = Color(0xD2,0xB4,0x8C)
-teal16            = Color(0x00,0x80,0x80)
 thistle           = Color(0xD8,0xBF,0xD8)
 tomato            = Color(0xFF,0x63,0x47)
 turquoise         = Color(0x40,0xE0,0xD0)
@@ -355,7 +391,7 @@ def hsv(H, S, V):
 	
 	if S == 0:
 		if H <= 0 or H > 360 :
-			return color(int(V*255),int(V*255),int(V*255))
+			return Color(int(V*255),int(V*255),int(V*255))
 
 	if H==360: H=0
 

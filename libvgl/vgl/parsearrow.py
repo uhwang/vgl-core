@@ -39,8 +39,8 @@ def parse_arrow_pattern(pattern: str) -> Dict[str, Any]:
     pattern, suffix = extract_suffix(pattern)
 
     # Step 2: Extract and remove fill commands like fl(...), fr(...), f(...)
-    fill_cmds = re.findall(r'(fl\([^)]*\)|fr\([^)]*\)|f\([^)]*\))', pattern)
-    pattern = re.sub(r'(fl\([^)]*\)|fr\([^)]*\)|f\([^)]*\))', '', pattern)
+    fill_cmds = re.findall(r'(fl\([^)]*\)|fr\([^)]*\)|f\([^)]*\)|lp\([^)]*\))', pattern)
+    pattern = re.sub(r'(fl\([^)]*\)|fr\([^)]*\)|f\([^)]*\)|lp\([^)]*\))', '', pattern)
 
     # Step 3: Match arrow structure
     arrow_re = re.compile(
@@ -71,6 +71,7 @@ def parse_arrow_pattern(pattern: str) -> Dict[str, Any]:
         'fill': None,
         'left_fill': None,
         'right_fill': None,
+        'lpat': None
     }
 
     # Step 4: Fill from commands
@@ -81,6 +82,8 @@ def parse_arrow_pattern(pattern: str) -> Dict[str, Any]:
             result['right_fill'] = _parse_colour(cmd[3:-1])
         elif cmd.startswith('f('):
             result['fill'] = {'type': 'fill', 'color': _parse_colour(cmd[2:-1])}
+        elif cmd.startswith('lp('):
+            result['lpat'] = cmd[3:-1]
 
     # Step 5: Fill from suffix if not overridden
     if suffix:

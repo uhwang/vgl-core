@@ -79,7 +79,8 @@ def draw_arrow(dev, sx, sy, ex, ey, style, size, lcol, lthk, lpat, fcol):
     p_b = p.get("body")
     p_f = p.get("fill")    
     p_fl= p.get("left_fill")    
-    p_fr= p.get("right_fill")    
+    p_fr= p.get("right_fill")
+    p_lp= p.get("lpat")
     
     def render_head(h_type):
         if   "open"   in h_type: return drawarrowhead._ARROW_HEAD_TYPE_OPEN
@@ -102,11 +103,12 @@ def draw_arrow(dev, sx, sy, ex, ey, style, size, lcol, lthk, lpat, fcol):
         else:
             return None, color_value(p_lf), color_value(p_rf)
 
-    f_col, fl_col, fr_col = None, None, None
+    f_col, fl_col, fr_col, lpat_ = None, None, None, None
     if p_f or p_fl or p_fr:
         f_col, fl_col, fr_col = render_color(p)
     
     if p_b:
+        if p_lp is not None: lpat = p_lp
         dev.line(sx, sy, ex, ey, lcol, lthk, lpat)
 
     if p_l:

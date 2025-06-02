@@ -49,6 +49,7 @@ symbol_cross_name          = symbol_name[13][0]
 symbol_star_name           = 'star'
 
 symbol_string = ','.join([ c[1] for c in symbol_name])
+#get_symbol_name = {s[1]:s[0] for s in symbol_name}
 get_symbol_name = {s[1]:s[0] for s in symbol_name}
 
 
@@ -102,7 +103,7 @@ class Circle(Symbol):
             
     def update(self, x,y):
         nvert = self.get_nvertex()
-        edge= self.hgt * self.size
+        edge= self.hgt * self.size * 0.5
         step = 360.0/nvert
         for i in range(nvert):
             rad = deg_to_rad(i*step)
@@ -260,7 +261,7 @@ class Square(Symbol):
         
     def update(self, x, y):
         edge= self.hgt * self.size
-        hh=0.5*edge
+        hh=0.5*edge*0.8
         
         self.vertex[0]=x-hh
         self.vertex[1]=y+hh
@@ -288,7 +289,7 @@ class Pentagon(Symbol):
     def update(self, x, y):
         step = 360.0/self.nvert
         deg_shift = 180*(0.5-2/self.nvert)
-        edge = self.hgt * self.size
+        edge = self.hgt * self.size * 0.6
         for i in range(self.nvert):
             rad = deg_to_rad(i*step+deg_shift)
             self.vertex[i*2]=x+edge*cos(rad)
