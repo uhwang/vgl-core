@@ -175,7 +175,7 @@ class DeviceEMF(device.DeviceRaster):
     def symbol(self, x,y, sym_str='o', size=0.02, deg=0,lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=color.RED):
         drawsymbol.draw_symbol(self,x,y,sym_str,size,deg,lcol,lthk,lpat,fcol)
         
-    def arrow(self, sx, sy, ex, ey, style, size=0.02, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=color.RED):
+    def arrow(self, sx, sy, ex, ey, style, size=0.02, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=None):
         drawarrow.draw_arrow(self, sx, sy, ex, ey, style, size, lcol, lthk, lpat, fcol)
             
     def circle(self, x,y, rad, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=None):

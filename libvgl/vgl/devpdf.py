@@ -38,7 +38,7 @@ class DevicePDF(device.DeviceVector):
             pdir = devval.layout_dir_portrait if pdir in "Pp" else\
                    devval.layout_dir_landscape
         
-        self.dev = drvpdf.PDFDriver(fname, 
+        self.drv = drvpdf.PDFDriver(fname, 
                                     gbox, 
                                     size[0], 
                                     size[1], 
@@ -58,11 +58,11 @@ class DevicePDF(device.DeviceVector):
         return
         
     def make_pen(self, color, thk):
-        self.dev.MakePen(color, thk*drvpdf._points_inch)
+        self.drv.MakePen(color, thk*drvpdf._points_inch)
         self.pen = True
     
     def delete_pen(self):
-        self.dev.DeletePen()
+        self.drv.DeletePen()
         self.pen = False
         
     def _line(self, sx, sy, ex, ey, lcol=None, lthk=None, lpat=linepat._PAT_SOLID, viewport=False):
@@ -93,8 +93,8 @@ class DevicePDF(device.DeviceVector):
             self.polyline(xx,yy,lcol,lthk,lpat,viewport)
         else:
             if self.pen:
-                self.dev.MoveTo(sxp, syp)
-                self.dev.LineTo(exp, eyp)
+                self.drv.MoveTo(sxp, syp)
+                self.drv.LineTo(exp, eyp)
             else:
                 self.polyline(xx,yy,lcol,lthk,linepat._PAT_SOLID,viewport=viewport)
         
@@ -105,7 +105,7 @@ class DevicePDF(device.DeviceVector):
         else:
             sxp = self._x_viewport(x)*drvpdf._points_inch, 
             syp = self._y_viewport(y)*drvpdf._points_inch 
-        self.dev.MoveTo(sxp, syp)
+        self.drv.MoveTo(sxp, syp)
 
     def _lineto(self, x, y, viewport=False):
         if viewport:
@@ -114,7 +114,7 @@ class DevicePDF(device.DeviceVector):
         else:
             sxp = self._x_viewport(x)*drvpdf._points_inch, 
             syp = self._y_viewport(y)*drvpdf._points_inch 
-        self.dev.LineTo(sxp, syp)
+        self.drv.LineTo(sxp, syp)
         
     def moveto(self, x, y):
         self._moveto(x,y,False)
@@ -152,9 +152,9 @@ class DevicePDF(device.DeviceVector):
                 px = [self._x_viewport(xx)*drvpdf._points_inch for xx in x]
                 py = [self._y_viewport(yy)*drvpdf._points_inch for yy in y]
             if isinstance(lcol, color.Color) and lpat == linepat._PAT_SOLID:
-                self.dev.Polygon(px,py,lcol,_lthk,fcol)
+                self.drv.Polygon(px,py,lcol,_lthk,fcol)
             elif fcol:
-                self.dev.Polygon(px,py,None,None,fcol)
+                self.drv.Polygon(px,py,None,None,fcol)
     
         if lcol and pat_inst:
             if isinstance(lpat, str):
@@ -181,7 +181,7 @@ class DevicePDF(device.DeviceVector):
             for p1 in pat_seg:
                 x2 = [p2[0]*drvpdf._points_inch for p2 in p1 ]
                 y2 = [p2[1]*drvpdf._points_inch for p2 in p1 ]
-                self.dev.Polyline(x2, y2, lcol, _lthk, fcol=None, closed=False)
+                self.drv.Polyline(x2, y2, lcol, _lthk, fcol=None, closed=False)
             #self.delete_pen()
             
     def begin_symbol(self, sym):
@@ -195,12 +195,12 @@ class DevicePDF(device.DeviceVector):
     #    px, py = sym.update_xy(cx,cy)
     #    ppx = [px1*drvpdf._points_inch for px1 in px]
     #    ppy = [py1*drvpdf._points_inch for py1 in py]
-    #    self.dev.Polygon(ppx, ppy, sym.lcol, sym.lthk*drvpdf._points_inch, sym.fcol)
+    #    self.drv.Polygon(ppx, ppy, sym.lcol, sym.lthk*drvpdf._points_inch, sym.fcol)
         
     def symbol(self, x,y, sym_str='o', size=0.02, deg=0,lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=color.RED):
         drawsymbol.draw_symbol(self,x,y,sym_str,size,deg,lcol,lthk,lpat,fcol)
 
-    def arrow(self, sx, sy, ex, ey, style, size=0.02, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=color.RED):
+    def arrow(self, sx, sy, ex, ey, style, size=0.02, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=None):
         drawarrow.draw_arrow(self, sx, sy, ex, ey, style, size, lcol, lthk, lpat, fcol)
             
     def circle(self, x,y, rad, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=None):
@@ -231,7 +231,7 @@ class DevicePDF(device.DeviceVector):
                 if closed:
                     px.append(self._x_viewport(x[0])*drvpdf._points_inch)
                     py.append(self._y_viewport(y[0])*drvpdf._points_inch)
-            self.dev.Polyline(px,py,_lcol,_lthk,fcol=None,closed=False)
+            self.drv.Polyline(px,py,_lcol,_lthk,fcol=None,closed=False)
     
         #if lcol and pat_inst:
         if not self.pen and lcol and pat_inst:
@@ -263,7 +263,7 @@ class DevicePDF(device.DeviceVector):
             for p1 in pat_seg:
                 x2 = [p2[0]*drvpdf._points_inch for p2 in p1 ]
                 y2 = [p2[1]*drvpdf._points_inch for p2 in p1 ]
-                self.dev.Polyline(x2, y2, _lcol, _lthk, fcol=None, closed=False)
+                self.drv.Polyline(x2, y2, _lcol, _lthk, fcol=None, closed=False)
         
         
     def lpolygon(self, x, y, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=None):
@@ -273,13 +273,13 @@ class DevicePDF(device.DeviceVector):
         self.polyline(x,y,lcol,lthk,lpat,closed,viewport=True)
         
     def create_clip(self, sx, sy, ex, ey):
-        self.dev.CreateClip(sx*drvpdf._points_inch, 
+        self.drv.CreateClip(sx*drvpdf._points_inch, 
                             sy*drvpdf._points_inch, 
                             ex*drvpdf._points_inch, 
                             ey*drvpdf._points_inch)
         
     def delete_clip(self):
-        self.dev.DeleteClip()
+        self.drv.DeleteClip()
         
     def close(self):
-        self.dev.Close()
+        self.drv.Close()

@@ -110,7 +110,7 @@ class DeviceSVG(device.DeviceRaster):
     def symbol(self, x,y, sym_str='o', size=0.02,deg=0,lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=color.RED):
         drawsymbol.draw_symbol(self,x,y,sym_str,size,deg,lcol,lthk,lpat,fcol)
         
-    def arrow(self, sx, sy, ex, ey, style, size=0.02, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=color.RED):
+    def arrow(self, sx, sy, ex, ey, style, size=0.02, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=None):
         drawarrow.draw_arrow(self, sx, sy, ex, ey, style, size, lcol, lthk, lpat, fcol)
                         
     def end_symbol(self):  
@@ -242,7 +242,7 @@ class DeviceSVG(device.DeviceRaster):
             _lthk = lthk*self.frm.hgt()
             
         # solid line
-        if pat_inst==False or fcol:
+        if pat_inst==False or fcol or lcol:
             self.fp.write("<polygon points=\"")
             if viewport:
                 self.create_pnt_list(x,y,self.get_xl,self.get_yl)

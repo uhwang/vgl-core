@@ -122,7 +122,7 @@ class DeviceIMG(device.DeviceRaster):
             self.cntx.line_to(convx(x1), convy(y1))
     
     def draw_geometry(self, lcol, lthk, lpat, fcol):
-        if fcol or self.brush.fcol: 
+        if fcol is not None or self.brush.fcol: 
             if fcol: 
                 self.make_brush(fcol)
             elif self.brush.fcol:
@@ -272,7 +272,7 @@ class DeviceIMG(device.DeviceRaster):
         #self.polygon(px,py,sym.lcol,sym.lthk,linepat._PAT_SOLID, sym.fcol, viewport=True)
         drawsymbol.draw_symbol(self,x,y,sym_str,size,deg,lcol,lthk,lpat,fcol)
     
-    def arrow(self, sx, sy, ex, ey, style, size=0.02, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=color.RED):
+    def arrow(self, sx, sy, ex, ey, style, size=0.02, lcol=color.BLACK, lthk=0.001, lpat=linepat._PAT_SOLID, fcol=None):
         drawarrow.draw_arrow(self, sx, sy, ex, ey, style, size, lcol, lthk, lpat, fcol)
         
     def lline(self, sx, sy, ex, ey, lcol=None, lthk=None, lpat=linepat._PAT_SOLID):

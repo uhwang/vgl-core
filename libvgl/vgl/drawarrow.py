@@ -20,13 +20,14 @@ from . import util
 from . import color
 from . import parsearrow
 from . import drawarrowhead
+from . import parsecolor
 
 _ARROW_HEAD_ANGLE    = 15   # degree
 _ARROW_HEAD_LENGTH_0 = 0.01 # 
 _ARROW_HEAD_LENGTH_1 = 0.05 # 
 _VIKING_XPOS_SCALE   = 0.7
 
-def draw_arrow(dev, sx, sy, ex, ey, style, size, lcol, lthk, lpat, fcol):
+def draw_arrow(dev, sx, sy, ex, ey, style, size, lcol, lthk, lpat, fcol, color_table=None):
     
     style.replace(' ','')
     style.lower()
@@ -87,26 +88,33 @@ def draw_arrow(dev, sx, sy, ex, ey, style, size, lcol, lthk, lpat, fcol):
         elif "closed" in h_type: return drawarrowhead._ARROW_HEAD_TYPE_CLOSED
         elif "viking" in h_type: return drawarrowhead._ARROW_HEAD_TYPE_VIKING
         
-    def color_value(c):
-        if c.find(',') >= 0: 
-            c_ = c.split(',')
-            return color.Color(int(c_[0]), int(c_[1]), int(c_[2]))
-        else:
-            return color.default_color[c]
+    #def color_value(c):
+    #    if c.find(',') >= 0: 
+    #        c_ = c.split(',')
+    #        return color.Color(int(c_[0]), int(c_[1]), int(c_[2]))
+    #    else:
+    #        return color.default_color[c]
             
     def render_color(p):
         p_f, p_lf, p_rf = p.get("fill"), p.get("left_fill"), p.get("right_fill")
         
         if p_f:
             f_col = p_f["color"]
-            return color_value(f_col), None, None
+            return parsecolor.parse_color(f_col), None, None
         else:
-            return None, color_value(p_lf), color_value(p_rf)
-
+            return None, parsecolor.parse_color(p_lf), parsecolor.parse_color(p_rf)
+    
     f_col, fl_col, fr_col, lpat_ = None, None, None, None
+
     if p_f or p_fl or p_fr:
         f_col, fl_col, fr_col = render_color(p)
     
+    if lcol is not None or fcol is not None:
+        if lcol is not None:
+            lcol = parsecolor.parse_color(lcol)
+        if fcol is not None:
+            fcol = parsecolor.parse_color(fcol)
+            f_col = fcol
     if p_b:
         if p_lp is not None: lpat = p_lp
         dev.line(sx, sy, ex, ey, lcol, lthk, lpat)
@@ -115,9 +123,8 @@ def draw_arrow(dev, sx, sy, ex, ey, style, size, lcol, lthk, lpat, fcol):
         drawarrowhead.draw_arrow_head(
                         dev,
                         render_head(p_l['type']),
-                        f_col if f_col else fl_col,
                         drawarrowhead._ARROW_DIR_LEFT, 
-                        lcol, lthk, fcol,
+                        lcol, lthk, f_col if f_col else fl_col,
                         xs_open_left, 
                         ys_open_left, 
                         xs_open_right, 
@@ -131,9 +138,9 @@ def draw_arrow(dev, sx, sy, ex, ey, style, size, lcol, lthk, lpat, fcol):
         drawarrowhead.draw_arrow_head(
                         dev, 
                         render_head(p_r['type']),
-                        f_col if f_col else fr_col,
+                        
                         drawarrowhead._ARROW_DIR_RIGHT, 
-                        lcol, lthk, fcol,
+                        lcol, lthk, f_col if f_col else fr_col,
                         xs_open_left, 
                         ys_open_left, 
                         xs_open_right, 

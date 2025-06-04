@@ -10,9 +10,8 @@ _ARROW_DIR_RIGHT              = 0x0005
 
 def draw_arrow_head(dev, 
                     head_type, 
-                    f_col,
                     direction, 
-                    lcol, lthk, fcol, 
+                    lcol, lthk, fcol,
                     xs_l, ys_l, 
                     xs_r, ys_r, 
                     xs_vl, ys_vl, 
@@ -21,10 +20,10 @@ def draw_arrow_head(dev,
     if head_type == _ARROW_HEAD_TYPE_VIKING:
         
         if direction == _ARROW_DIR_LEFT:
-            dev.lpolygon(xs_vl, ys_vl, lcol=lcol, lthk=lthk, fcol=f_col)
+            dev.lpolygon(xs_vl, ys_vl, lcol=lcol, lthk=lthk, fcol=fcol)
             
         elif direction == _ARROW_DIR_RIGHT:
-            dev.lpolygon(xs_vr, ys_vr, lcol=lcol, lthk=lthk, fcol=f_col)
+            dev.lpolygon(xs_vr, ys_vr, lcol=lcol, lthk=lthk, fcol=fcol)
                 
     # Arrow style open
     elif head_type == _ARROW_HEAD_TYPE_OPEN:
@@ -43,9 +42,9 @@ def draw_arrow_head(dev,
     elif head_type == _ARROW_HEAD_TYPE_CLOSED:
    
         if direction == _ARROW_DIR_LEFT:
-            dev.lpolygon(xs_l, ys_l, lcol=lcol, lthk=lthk, fcol=f_col)
+            dev.lpolygon(xs_l, ys_l, lcol=lcol, lthk=lthk, fcol=fcol)
             
         elif direction == _ARROW_DIR_RIGHT:
-            dev.lpolygon(xs_r, ys_r, lcol=lcol, lthk=lthk, fcol=f_col)
+            dev.lpolygon(xs_r, ys_r, lcol=lcol, lthk=lthk, fcol=fcol)
     
     
