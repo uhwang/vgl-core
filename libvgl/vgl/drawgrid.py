@@ -13,7 +13,7 @@ from . import axis
 #import frame
 #import axis
 
-def draw_grid(dev):
+def draw_grid(dev, xmj=False, xmi=False, ymj=False, ymi=False):
     frm = dev.frm
     xx = yy = mispc = oxx = wxx = wyy = mitlen = mjtlen = 0.0
     i  = j  = vi    = 0
@@ -36,7 +36,7 @@ def draw_grid(dev):
     ey = frm.bbox.sy+frm.pdom.get_ey()
     fnt = xaxis.first_nminor_tick
     
-    if minor_grid.show:
+    if minor_grid.show or xmi:
         dev.make_pen(minor_grid.lcol, minor_grid.lthk*hgt)
         if fnt > 0:
             for i in range(fnt):
@@ -63,7 +63,7 @@ def draw_grid(dev):
             j+=1
         dev.delete_pen()
     
-    if xaxis.major_grid.show:    
+    if xaxis.major_grid.show or xmj:    
         vi = 1
         wxx = xaxis.first_major_tick_pos
         dev.make_pen(major_grid.lcol, major_grid.lthk*hgt)
@@ -83,7 +83,7 @@ def draw_grid(dev):
     ex = frm.bbox.sx+frm.pdom.get_ex()
     fnt = yaxis.first_nminor_tick
     
-    if yaxis.minor_grid.show:
+    if yaxis.minor_grid.show or ymi:
         dev.make_pen(minor_grid.lcol, minor_grid.lthk*hgt)
         if fnt != 0:
             for i in range(fnt):
@@ -111,7 +111,7 @@ def draw_grid(dev):
             j += 1
         dev.delete_pen()
     
-    if yaxis.major_grid.show:
+    if yaxis.major_grid.show or ymj:
         vi = 1;
         wyy = yaxis.first_major_tick_pos
         dev.make_pen(major_grid.lcol, major_grid.lthk*hgt)
