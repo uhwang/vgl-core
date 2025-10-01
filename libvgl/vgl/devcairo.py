@@ -19,19 +19,28 @@ from . import drawarrow
 from . import parselinepattern
 
 class DeviceIMG(device.DeviceRaster):
-    def __init__(self, fname, gbox, dpi):
+    def __init__(self, fname, gbox, dpi, transparent=True):
         super().__init__(gbox, dpi)
         self.fname  = fname
         self.pen    = gdiobj.Pen()
         self.prv_pen= gdiobj.Pen()
         self.brush  = gdiobj.Brush()
         self.data   = np.ndarray(shape=(int(self.ghgt), int(self.gwid)), dtype=np.uint32)
+        self.data[:] = 0xff
         self.surf   = cairo.ImageSurface.create_for_data(self.data, 
                       cairo.FORMAT_ARGB32, int(self.gwid), int(self.ghgt))
         self.cntx   = cairo.Context(self.surf)
         self.lcol   = color.WHITE
         self.fcol   = color.WHITE
-        self.fill_white()
+        
+        self.transparent = transparent
+        if transparent:
+            self.cntx.set_source_rgba(1,1,1,0)
+        else: 
+            self.cntx.set_source_rgb(1,1,1)
+            
+        self.cntx.paint()
+        
         self.nlineto = 0
     
     def set_device(self, frm, extend=device._FIT_NONE):
@@ -42,26 +51,36 @@ class DeviceIMG(device.DeviceRaster):
         
     def set_pixel(self, x, y, col):
         self.set_surface_pixel(self.get_xp(x), self.get_yp(y), col)
+    
+    def put_pixel(self, x, y, col):
+        self.data[y][x] = int("0xFF%02X%02X%02X"%(col.r,col.g,col.b),16)
         
     def fill_black(self):
-        self.data[::]=0xff000000
+        self.data[::]=0x00000000
 
     def fill_white(self):
-        self.data[::]=0x0ffffffff
+        self.data[::]=0x00ffffff
 
     def fill_cyan(self):
-        self.data[::]=0xff00ffff
+        self.data[::]=0x0000ffff
     
     def make_pen(self, lcol, lthk):
         self.pen.lthk = lthk
         self.pen.lcol = lcol
         c = color.normalize(lcol)
-        self.cntx.set_source_rgb(c.r,c.g,c.b)
+        if self.transparent:
+            self.cntx.set_source_rgba(c.r,c.g,c.b,1)
+        else:
+            self.cntx.set_source_rgb(c.r,c.g,c.b)
+        #self.cntx.set_source_rgb(c.r,c.g,c.b)
         self.cntx.set_line_width(self.get_ylt(lthk))
         
     def make_brush(self, fcol):
         self.fcol = color.normalize(fcol)
-        self.cntx.set_source_rgb(self.fcol.r,self.fcol.g,self.fcol.b)
+        if self.transparent:
+            self.cntx.set_source_rgba(self.fcol.r,self.fcol.g,self.fcol.b,1)
+        else:
+            self.cntx.set_source_rgb(self.fcol.r,self.fcol.g,self.fcol.b)
         self.brush.fcol = fcol
         
     def delete_pen(self):
